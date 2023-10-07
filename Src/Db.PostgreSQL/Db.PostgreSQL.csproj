@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Yaver.Db.PostgreSQL</AssemblyName>
+    <RootNamespace>Yaver.Db</RootNamespace>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Db.Core/Db.Core.csproj" />
+  </ItemGroup>
+
+  <!-- PostgreSQL -->
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-rc.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite"
+      Version="8.0.0-rc.1" />
+  </ItemGroup>
+
+</Project>

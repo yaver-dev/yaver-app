@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Admin.ServiceBase</AssemblyName>
+    <RootNamespace>Admin.ServiceBase</RootNamespace>
+  </PropertyGroup>
+
+  <!-- FastEndpoints -->
+  <ItemGroup>
+    <PackageReference Include="FastEndpoints.Messaging.Core" Version="5.*" />
+  </ItemGroup>
+
+  <!-- Global Usings -->
+  <ItemGroup>
+    <Using Include="System" />
+    <Using Include="FastEndpoints" />
+  </ItemGroup>
+</Project>

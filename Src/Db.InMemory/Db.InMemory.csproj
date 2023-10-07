@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Yaver.Db.InMemory</AssemblyName>
+    <RootNamespace>Yaver.Db</RootNamespace>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Db.Core/Db.Core.csproj" />
+  </ItemGroup>
+
+  <!-- EntityFramework  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"
+      Version="8.0.0-rc.1.23419.6" />
+  </ItemGroup>
+
+</Project>

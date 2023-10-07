@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <AssemblyName>Yaver.Core</AssemblyName>
+        <RootNamespace>Yaver.Core</RootNamespace>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+</Project>

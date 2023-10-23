@@ -1,6 +1,9 @@
+
+
+
 namespace Admin.ServiceBase.DatabaseServers;
 
-public record CreateDatabaseServerCommand(
+public sealed record CreateDatabaseServerCommand(
   string Host,
   int Port,
   string Name,

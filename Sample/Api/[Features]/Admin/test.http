@@ -4,6 +4,19 @@
 ###
 
 ## Products
+### Create Product
+POST {{BaseUrl}}/database-servers
+Accept-Language: tr
+X-UserInfo: {{xUserInfo}}
+Content-Type: application/json
+{
+	"ConnectionStringFormat":"xxxxx",
+	"Host":"sadsadfdsa",
+	"IsAvailable":true,
+	"IsDefault":true,
+	"Name":"231223",
+	"Port":10
+}
 
 ### Get Products
 GET {{BaseUrl}}/database-servers
@@ -19,25 +32,12 @@ Accept-Language: tr
 
 
 ### Get Product by Id
-GET {{BaseUrl}}/database-servers/164c5de5-c9a0-4e6f-9266-92aa7e4be5bf
+GET {{BaseUrl}}/database-servers/5e5452be-2ddf-4d6c-ba88-bc5d736896be
 accept: application/json
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
 # Content-Type: application/json
 
-### Create Product
-POST {{BaseUrl}}/database-servers
-Accept-Language: tr
-X-UserInfo: {{xUserInfo}}
-Content-Type: application/json
-{
-	"ConnectionStringFormat":"xxxxx",
-	"Host":"sadsadfdsa",
-	"IsAvailable":true,
-	"IsDefault":true,
-	"Name":"231223",
-	"Port":1234
-}
 
 ### Update Product
 PUT {{BaseUrl}}/database-servers/164c5de5-c9a0-4e6f-9266-92aa7e4be5bf

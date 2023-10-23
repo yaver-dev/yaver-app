@@ -1,8 +1,6 @@
 ﻿using Admin.Service.Data;
 using Admin.Service.DatabaseServers;
 
-using Calzolari.Grpc.AspNetCore.Validation;
-
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 using Yaver.App;
@@ -12,8 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Accept only HTTP/2 to allow insecure connections for development.
 builder.WebHost.ConfigureKestrel(o => o.ListenAnyIP(6000, c => c.Protocols = HttpProtocols.Http2));
 builder.AddHandlerServer(
-  options =>
-  {
+  options => {
     // options.Interceptors.Add<ServerLogInterceptor>();
     options.Interceptors.Add<ServerFeaturesInterceptor>();
     // options.EnableMessageValidation();
@@ -31,7 +28,7 @@ builder.Services.AddHttpContextAccessor();
 
 // builder.Services.AddDbContext<ServiceDbContext>(options => options.UseInMemoryDatabase("PIM"));
 
-builder.Services.AddGrpcValidation();
+// builder.Services.AddGrpcValidation();
 
 // builder.Services.AddSingleton<IValidatorErrorMessageHandler>(new CustomMessageHandler());
 

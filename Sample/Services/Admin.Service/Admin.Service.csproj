@@ -12,7 +12,7 @@
 
   <!-- 3rd Party -->
   <ItemGroup>
-    <PackageReference Include="Calzolari.Grpc.AspNetCore.Validation" Version="6.3.0" />
+    <PackageReference Include="FluentValidation" Version="11.8.0" />
   </ItemGroup>
 
   <!-- Service Base -->

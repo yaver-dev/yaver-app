@@ -26,6 +26,38 @@ public static class QueryableExtensions {
       typeof(Queryable).GetMethods().Single(method =>
           method.Name == "ThenByDescending" && method.GetParameters().Length == 2);
 
+
+  public static async Task<Tuple<int, IQueryable<T>>> PaginateAsync<T>(
+      this IQueryable<T> source,
+      string? searchTerm = null,
+      string? sort = null,
+      int? offset = null,
+      int? limit = null
+  ) where T : class {
+
+    #region filter
+
+    Expression<Func<T, bool>>? filter = null;
+    // var sort = command.Sort;
+
+    if (!string.IsNullOrWhiteSpace(searchTerm)) {
+      filter = LinqHelper.BuildFilter<T>(searchTerm, [$"name", $"host"]);
+    }
+
+    #endregion
+
+    #region sorting
+    if (!string.IsNullOrWhiteSpace(sort)) {
+      sort = LinqHelper.BuildSort(
+        sort,
+        new Dictionary<string, string> { { "name", "host" } }
+      );
+    }
+
+    #endregion
+
+    return await source.PaginateAsync(filter, sort, offset, limit);
+  }
   /// <summary>
   /// Paginates the given queryable source with optional filter, sort, offset and limit parameters.
   /// </summary>
@@ -36,13 +68,13 @@ public static class QueryableExtensions {
   /// <param name="offset">The number of items to skip from the beginning of the source.</param>
   /// <param name="limit">The maximum number of items to return from the source.</param>
   /// <returns>A pagination result containing the count of items and the paginated items.</returns>
-  public static async Task<PaginationResult<T>> PaginateAsync<T>(
-      this IQueryable<T> source,
-      Expression<Func<T, bool>> filter = null,
-      string? sort = null,
-      int? offset = null,
-      int? limit = null
-  ) where T : class {
+  public static async Task<Tuple<int, IQueryable<T>>> PaginateAsync<T>(
+    this IQueryable<T> source,
+    Expression<Func<T, bool>> filter = null,
+    string? sort = null,
+    int? offset = null,
+    int? limit = null
+) where T : class {
     var itemIndex = offset ?? 0;
     var pageSize = limit ?? 25;
 
@@ -72,13 +104,13 @@ public static class QueryableExtensions {
     source = source.Skip(itemIndex);
 
     source = source.Take(pageSize);
+    return new Tuple<int, IQueryable<T>>(count, source);
+    // var items = await source.ToListAsync();
 
-    var items = await source.ToListAsync();
-
-    return new PaginationResult<T>(default, default) {
-      Count = count,
-      Items = items
-    };
+    // return new PaginationResult<T>(default, default) {
+    //   Count = count,
+    //   Items = items
+    // };
   }
 
   /// <summary>

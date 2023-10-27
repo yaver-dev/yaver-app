@@ -3,50 +3,59 @@ using Admin.Service.DatabaseServers.Entities;
 using Admin.Service.Data;
 using Microsoft.EntityFrameworkCore;
 using Grpc.Core;
+using System.Text.Json;
 
 namespace Admin.Service.DatabaseServers;
 public static class UpdateDatabaseServer {
   public sealed class Handler(ServiceDbContext db)
     : ICommandHandler<UpdateDatabaseServerCommand, DatabaseServerResult> {
-    public async Task<DatabaseServerResult> ExecuteAsync(UpdateDatabaseServerCommand cmd, CancellationToken ct) {
-      var entity = await db
-        .DatabaseServers
-        .FirstOrDefaultAsync(r => r.Id == cmd.Id, cancellationToken: ct)
-      ?? throw new RpcException(new Status(StatusCode.NotFound, $"databaseServer not found"));
+    public async Task<DatabaseServerResult> ExecuteAsync(UpdateDatabaseServerCommand command, CancellationToken ct) {
+
+      var entity = await _getEntityForUpdateAsync(db, command.Id, ct) ??
+         throw new Exception("Database server not found.");
 
 
-      //TODO: EP de singleton ama burada degil
-      var mapper = new Mapper();
-      mapper.UpdateEntity(cmd, entity);
+      //validate command
+      // return Result<DatabaseServerResult>.Invalid(validation.AsErrors());
+      UpdateEntity(command, entity);
 
-      await db.DatabaseServers.AddAsync(entity, ct);
+      db.DatabaseServers.Update(entity);
       await db.SaveChangesAsync(ct);
 
-      var response = await db.DatabaseServers.FindAsync([entity.Id], cancellationToken: ct) is not null ? mapper.FromEntity(entity) : null!;
-      return response;
+      var result = await _getEntityForResultAsync(db, entity.Id, ct) ??
+         throw new Exception("Database server not found.");
+      return result;
     }
+  }
 
-    public sealed class Mapper : Mapper<UpdateDatabaseServerCommand, DatabaseServerResult, DatabaseServer> {
-      public override DatabaseServerResult FromEntity(DatabaseServer e) => new(
-        Id: e.Id,
-        Host: e.Host,
-        Port: e.Port,
-        Name: e.Name,
-        ConnectionStringFormat: e.ConnectionStringFormat,
-        IsDefault: e.IsDefault,
-        Status: e.Status
-      );
 
-      public override DatabaseServer UpdateEntity(UpdateDatabaseServerCommand r, DatabaseServer e) {
-        e.Host = r.Host;
-        e.Port = r.Port;
-        e.Name = r.Name;
-        e.ConnectionStringFormat = r.ConnectionStringFormat;
-        e.IsDefault = r.IsDefault;
-        e.Status = r.Status;
+  private static readonly Func<ServiceDbContext, Guid, CancellationToken, Task<DatabaseServer?>> _getEntityForUpdateAsync =
+     EF.CompileAsyncQuery((ServiceDbContext context, Guid id, CancellationToken ct) =>
+       context.DatabaseServers
+        .FirstOrDefault(c => c.Id == id));
 
-        return e;
-      }
-    }
+  private static readonly Func<ServiceDbContext, Guid, CancellationToken, Task<DatabaseServerResult?>> _getEntityForResultAsync =
+     EF.CompileAsyncQuery((ServiceDbContext context, Guid id, CancellationToken ct) =>
+       context.DatabaseServers
+       .AsNoTracking()
+         .Select(x => new DatabaseServerResult(
+           x.Id,
+           x.Host,
+           x.Port,
+           x.Name,
+           x.ConnectionStringFormat,
+           x.IsDefault,
+           x.Status
+         ))
+         .FirstOrDefault(c => c.Id == id));
+
+  private static DatabaseServer UpdateEntity(this UpdateDatabaseServerCommand r, DatabaseServer e) {
+    e.Host = r.Host;
+    e.Port = r.Port;
+    e.Name = r.Name;
+    e.ConnectionStringFormat = r.ConnectionStringFormat;
+    e.IsDefault = r.IsDefault;
+    e.Status = r.Status;
+    return e;
   }
 }

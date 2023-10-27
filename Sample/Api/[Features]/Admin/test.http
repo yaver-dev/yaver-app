@@ -29,10 +29,8 @@ X-UserInfo: {{xUserInfo}}
 Accept-Language: tr
 # Content-Type: application/json
 
-
-
 ### Get Product by Id
-GET {{BaseUrl}}/database-servers/5e5452be-2ddf-4d6c-ba88-bc5d736896be
+GET {{BaseUrl}}/database-servers/f0ca5da7-92de-40b7-901b-0a0855a44178
 accept: application/json
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
@@ -40,13 +38,13 @@ X-UserInfo: {{xUserInfo}}
 
 
 ### Update Product
-PUT {{BaseUrl}}/database-servers/164c5de5-c9a0-4e6f-9266-92aa7e4be5bf
+PUT {{BaseUrl}}/database-servers/f0ca5da7-92de-40b7-901b-0a0855a44178
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
 Content-Type: application/json
 {
 	"ConnectionStringFormat":"eragtwagf",
-	"Host":"SERVER",
+	"Host":"srv",
 	"IsAvailable":true,
 	"IsDefault":true,
 	"Name":"xdscasvasz",

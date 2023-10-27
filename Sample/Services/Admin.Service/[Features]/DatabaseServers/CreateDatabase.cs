@@ -2,6 +2,7 @@
 using Admin.Service.DatabaseServers.Entities;
 using Admin.Service.Data;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace Admin.Service.DatabaseServers;
 public static class CreateDatabase {
@@ -14,43 +15,43 @@ public static class CreateDatabase {
 
       //validate command
       // return Result<DatabaseServerResult>.Invalid(validation.AsErrors());
-      var mapper = new Mapper();
-      var entity = mapper.ToEntity(command);
+      var entity = command.ToEntity();
 
       await db.DatabaseServers.AddAsync(entity, ct);
       await db.SaveChangesAsync(ct);
 
-      var response = await db.DatabaseServers.FindAsync([entity.Id], cancellationToken: ct) is not null ? mapper.FromEntity(entity) : null!;
-      return response;
+      var result = await _getEntityForResultAsync(db, entity.Id, ct) ??
+          throw new Exception("Database server not found.");
+
+      return result;
     }
 
-
-
-    public sealed class Validator : AbstractValidator<CreateDatabaseServerCommand> {
-
-    }
-
-    public sealed class Mapper : Mapper<CreateDatabaseServerCommand, DatabaseServerResult, DatabaseServer> {
-      public override DatabaseServer ToEntity(CreateDatabaseServerCommand r) => new(
-           host: r.Host,
-           port: r.Port,
-           name: r.Name,
-           connectionStringFormat: r.ConnectionStringFormat,
-           isDefault: r.IsDefault,
-           status: r.Status
-         );
-
-      public override DatabaseServerResult FromEntity(DatabaseServer e) => new(
-        Id: e.Id,
-        Host: e.Host,
-        Port: e.Port,
-        Name: e.Name,
-        ConnectionStringFormat: e.ConnectionStringFormat,
-        IsDefault: e.IsDefault,
-        Status: e.Status
-      );
-
-
-    }
   }
+
+  public sealed class Validator : AbstractValidator<CreateDatabaseServerCommand> {
+
+  }
+
+  private static readonly Func<ServiceDbContext, Guid, CancellationToken, Task<DatabaseServerResult?>> _getEntityForResultAsync =
+     EF.CompileAsyncQuery((ServiceDbContext context, Guid id, CancellationToken ct) =>
+       context.DatabaseServers
+       .AsNoTracking()
+         .Select(x => new DatabaseServerResult(
+           x.Id,
+           x.Host,
+           x.Port,
+           x.Name,
+           x.ConnectionStringFormat,
+           x.IsDefault,
+           x.Status
+         ))
+         .FirstOrDefault(c => c.Id == id));
+
+  private static DatabaseServer ToEntity(this CreateDatabaseServerCommand r) => new(
+    host: r.Host,
+    port: r.Port,
+    name: r.Name,
+    connectionStringFormat: r.ConnectionStringFormat,
+    isDefault: r.IsDefault,
+    status: r.Status);
 }

@@ -1,4 +1,6 @@
-﻿using Admin.Service.Data;
+﻿using System.Reflection;
+
+using Admin.Service.Data;
 using Admin.Service.DatabaseServers;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -23,7 +25,23 @@ builder.Services.AddDbContext<ServiceDbContext>();
 
 builder.Services.AddHttpContextAccessor();
 
+// add  all IMapper implementations in the assembly
+
+var mappers = AppDomain.CurrentDomain.GetAssemblies()
+           .SelectMany(s => s.GetTypes())
+           .Where(t => t.GetInterfaces().Contains(typeof(IMapper)))
+           .Where(t => !t.IsInterface && !t.IsAbstract);
+
+foreach (var mapper in mappers) {
+  // Console.WriteLine($"registered {mapper.ToString()}");
+  builder.Services.AddSingleton(mapper, mapper);
+}
+
+
+
+
 //from lib
+// builder.Services.AddRpcCommandHandlers();
 // builder.Services.AddValidator<IdRequestValidator>();
 
 // builder.Services.AddDbContext<ServiceDbContext>(options => options.UseInMemoryDatabase("PIM"));
@@ -35,6 +53,7 @@ builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 
+// app.MapRpcCommandHandlers();
 app.MapDatabaseServersHandlers();
 
 

@@ -1,4 +1,6 @@
-﻿using Admin.ApiBase.EndpointBase.UpdateDatabaseServer;
+﻿using System.Text.Json;
+
+using Admin.ApiBase.EndpointBase.UpdateDatabaseServer;
 using Admin.ApiBase.Model;
 using Admin.ServiceBase.DatabaseServers;
 
@@ -32,7 +34,7 @@ public static class UpdateDatabaseServer {
   public sealed class Mapper
   : YaverMapper<UpdateDatabaseServerRequest, DatabaseServerViewModel, UpdateDatabaseServerCommand, DatabaseServerResult> {
     public override UpdateDatabaseServerCommand ToCommand(UpdateDatabaseServerRequest r) => new(
-        Id: r.DatabaseServerViewModel.Id,
+        Id: r.Id,
         Host: r.DatabaseServerViewModel.Host,
         Port: r.DatabaseServerViewModel.Port,
         Name: r.DatabaseServerViewModel.Name,

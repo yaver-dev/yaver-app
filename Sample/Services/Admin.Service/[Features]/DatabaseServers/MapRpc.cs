@@ -11,12 +11,6 @@ public static partial class ModuleExtensions {
       h.Register<GetDatabaseServerCommand, GetDatabaseServer.Handler, DatabaseServerResult>();
       h.Register<UpdateDatabaseServerCommand, UpdateDatabaseServer.Handler, DatabaseServerResult>();
       h.Register<DeleteDatabaseServerCommand, DeleteDatabaseServer.Handler, DeleteDatabaseServerResult>();
-      // 	h.Register<UpdateProductCommand, UpdateProductCommandHandler, UpdateProductResult>();
-      // 	//https://github.dev/FastEndpoints/Remote-Procedure-Call-Demo
-      // 	//https://github.dev/FastEndpoints/Remote-Procedure-Call-Demo
-      // 	//h.RegisterServerStream<StatusStreamCommand, StatusUpdateHandler, StatusUpdate>();
-      // 	//h.RegisterClientStream<CurrentPosition, PositionProgressHandler, ProgressReport>();
-      // 	//h.RegisterEventHub<SomethingHappened>();
     });
 
     return app;

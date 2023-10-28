@@ -11,9 +11,9 @@ public class DatabaseServerEntityTypeConfiguration : IEntityTypeConfiguration<Da
     entity.HasIndex(b => new { b.Host }).IsUnique();
 
     entity
-            .Property(e => e.Status)
-            .HasConversion(
-                    v => v.ToString(),
-                    v => (DatabaseServerStatus)Enum.Parse(typeof(DatabaseServerStatus), v));
+      .Property(e => e.Status)
+      .HasConversion(
+              v => v.ToString(),
+              v => (DatabaseServerStatus)Enum.Parse(typeof(DatabaseServerStatus), v));
   }
 }

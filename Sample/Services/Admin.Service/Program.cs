@@ -4,8 +4,12 @@ using Admin.Service.Data;
 using Admin.Service.DatabaseServers;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using FluentValidation;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Yaver.App;
+using Admin.ServiceBase.DatabaseServers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +41,8 @@ foreach (var mapper in mappers) {
   builder.Services.AddSingleton(mapper, mapper);
 }
 
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+// builder.Services.AddScoped<IValidator<CreateDatabaseServerCommand>, CreateDatabase.Validator>();
 
 
 

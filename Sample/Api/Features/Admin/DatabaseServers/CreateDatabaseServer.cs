@@ -26,7 +26,7 @@ public static class CreateDatabaseServer
         var response = Map.ToResponse(result);
 
         await SendCreatedAtAsync(
-          //TODO generator base class needs to add WithName("CreateDatabaseServer") to the endpoint config
+          //TODO generator base class needs to add WithName("CreateDatabaseServer") to the endpoint configuration
           endpointName: "GetDatabaseServer",
           routeValues: new { id = response.Id },
           responseBody: response,

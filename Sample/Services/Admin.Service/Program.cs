@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
 
 using Admin.Service.Data;
-using Admin.Service.DatabaseServers;
+using Admin.Service.Features.DatabaseServers;
+
+using FluentValidation;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using FluentValidation;
 
 using Yaver.App;
 
@@ -27,8 +28,8 @@ builder.Services.AddDbContext<ServiceDbContext>();
 builder.Services.Configure<RequestLocalizationOptions>(options => {
   var supportedCultures = new[] { "tr", "en" };
   options.SetDefaultCulture(supportedCultures[0])
-      .AddSupportedCultures(supportedCultures)
-      .AddSupportedUICultures(supportedCultures);
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
 });
 
 builder.Services.AddHttpContextAccessor();
@@ -49,7 +50,6 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 // builder.Services.AddScoped<IValidator<CreateDatabaseServerCommand>, CreateDatabase.Validator>();
 
 
-
 //from lib
 // builder.Services.AddRpcCommandHandlers();
 // builder.Services.AddValidator<IdRequestValidator>();
@@ -68,16 +68,15 @@ app.MapDatabaseServersHandlers();
 
 
 var rInfo = new RequestInfo(
-
-UserId: Guid.NewGuid(),
-AcceptLanguage: "",
-RequestId: "",
-UserName: "",
-Email: "",
-GivenName: "",
-FamilyName: "",
-Roles: [],
-TenantIdentifier: ""
+    UserId: Guid.NewGuid(),
+    AcceptLanguage: "",
+    RequestId: "",
+    UserName: "",
+    Email: "",
+    GivenName: "",
+    FamilyName: "",
+    Roles:[],
+  TenantIdentifier: ""
   );
 // using (var scope = app.Services.CreateScope()) {
 var context = new ServiceDbContext(app.Configuration, new YaverContext(rInfo));

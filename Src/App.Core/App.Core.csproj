@@ -6,9 +6,6 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../Core/Core.csproj" />
-  </ItemGroup>
 
   <!-- FastEndpoints -->
   <ItemGroup>

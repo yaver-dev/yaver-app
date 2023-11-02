@@ -12,24 +12,24 @@
 
   <!-- 3rd Party -->
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.8.0" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.0" />
+    <PackageReference Include="FluentValidation" Version="11.8.0"/>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.0"/>
   </ItemGroup>
 
   <!-- Service Base -->
   <ItemGroup>
-    <ProjectReference Include="../../RpcContracts/Admin.ServiceBase/Admin.ServiceBase.csproj" />
+    <ProjectReference Include="../../RpcContracts/Admin.ServiceBase/Admin.ServiceBase.csproj"/>
   </ItemGroup>
 
   <!-- Yaver -->
   <ItemGroup>
-    <ProjectReference Include="../../../Src/App.Service/App.Service.csproj" />
-    <ProjectReference Include="../../../Src/Db.InMemory/Db.InMemory.csproj" />
+    <ProjectReference Include="../../../Src/App.Service/App.Service.csproj"/>
+    <ProjectReference Include="../../../Src/Db.InMemory/Db.InMemory.csproj"/>
   </ItemGroup>
 
   <!-- Global Usings -->
   <ItemGroup>
-    <Using Include="System" />
-    <Using Include="FastEndpoints" />
+    <Using Include="System"/>
+    <Using Include="FastEndpoints"/>
   </ItemGroup>
 </Project>

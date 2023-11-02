@@ -1,12 +1,10 @@
-using Admin.Service.Tenants.Entities;
-using Admin.Service.DatabaseServers.Entities;
-
+using Admin.Service.Features.DatabaseServers.Entities;
+using Admin.Service.Features.Tenants.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
 using Yaver.App;
 using Yaver.Db;
-using Admin.ServiceBase.DatabaseServers.Entities;
 
 namespace Admin.Service.Data;
 
@@ -14,9 +12,8 @@ public class ServiceDbContext : InMemoryDbContext {
   private const string Schema = "multitenancy";
 
   public ServiceDbContext(IConfiguration configuration, IYaverContext yaverContext)
-        : base(yaverContext.RequestInfo.UserId) {
+    : base(yaverContext.RequestInfo.UserId) {
     var connectionString = configuration.GetSection("ConnectionString").Value;
-
   }
 
 
@@ -49,5 +46,3 @@ public class ServiceDbContext : InMemoryDbContext {
     // builder.ApplyConfiguration(new TenantEntityTypeConfiguration());
   }
 }
-
-

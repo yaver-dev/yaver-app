@@ -1,4 +1,8 @@
+namespace Admin.Service; 
+
 public static class MainExtensions {
+  // private record Handler(Type command, Type handler, Type result);
+  private static List<Handler> handlers = new();
   //
   // Summary:
   //     adds the FastEndpoints services to the ASP.Net middleware pipeline
@@ -44,6 +48,4 @@ public static class MainExtensions {
   // }
 
   private record Handler(Type command, Type result);
-  // private record Handler(Type command, Type handler, Type result);
-  private static List<Handler> handlers = new();
 }

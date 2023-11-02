@@ -17,9 +17,13 @@ public class TenantPreProcessor : IGlobalPreProcessor {
   /// <param name="failures">A list of validation failures to add to if the header is missing or the value is not valid.</param>
   /// <param name="ct">A cancellation token to observe while waiting for the task to complete.</param>
   /// <returns>A task that represents the asynchronous operation.</returns>
-  public Task PreProcessAsync(object req, HttpContext ctx, List<ValidationFailure> failures, CancellationToken ct) {
-    var tenantID = ctx.Request.Headers["X-tenant-id"].FirstOrDefault();
+  public Task PreProcessAsync(
+    object req,
+    HttpContext ctx,
+    List<ValidationFailure> failures,
+    CancellationToken ct) {
 
+    var tenantID = ctx.Request.Headers["X-tenant-id"].FirstOrDefault();
     // ctx.Features.Set("tenant-id", tenantID);
 
     if (tenantID == null) {

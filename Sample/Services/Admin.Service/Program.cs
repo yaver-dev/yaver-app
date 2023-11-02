@@ -6,10 +6,7 @@ using Admin.Service.DatabaseServers;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using FluentValidation;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using Yaver.App;
-using Admin.ServiceBase.DatabaseServers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +16,7 @@ builder.AddHandlerServer(
   options => {
     // options.Interceptors.Add<ServerLogInterceptor>();
     options.Interceptors.Add<ServerFeaturesInterceptor>();
+
     // options.EnableMessageValidation();
   });
 
@@ -26,20 +24,26 @@ builder.Services.AddScoped<IYaverContext, YaverContext>();
 builder.Services.AddDbContext<ServiceDbContext>();
 
 
+builder.Services.Configure<RequestLocalizationOptions>(options => {
+  var supportedCultures = new[] { "tr", "en" };
+  options.SetDefaultCulture(supportedCultures[0])
+      .AddSupportedCultures(supportedCultures)
+      .AddSupportedUICultures(supportedCultures);
+});
 
 builder.Services.AddHttpContextAccessor();
 
 // add  all IMapper implementations in the assembly
 
-var mappers = AppDomain.CurrentDomain.GetAssemblies()
-           .SelectMany(s => s.GetTypes())
-           .Where(t => t.GetInterfaces().Contains(typeof(IMapper)))
-           .Where(t => !t.IsInterface && !t.IsAbstract);
+// var mappers = AppDomain.CurrentDomain.GetAssemblies()
+//            .SelectMany(s => s.GetTypes())
+//            .Where(t => t.GetInterfaces().Contains(typeof(IMapper)))
+//            .Where(t => !t.IsInterface && !t.IsAbstract);
 
-foreach (var mapper in mappers) {
-  // Console.WriteLine($"registered {mapper.ToString()}");
-  builder.Services.AddSingleton(mapper, mapper);
-}
+// foreach (var mapper in mappers) {
+//   // Console.WriteLine($"registered {mapper.ToString()}");
+//   builder.Services.AddSingleton(mapper, mapper);
+// }
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 // builder.Services.AddScoped<IValidator<CreateDatabaseServerCommand>, CreateDatabase.Validator>();
@@ -57,7 +61,7 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 // builder.Services.AddSingleton<IValidatorErrorMessageHandler>(new CustomMessageHandler());
 
 var app = builder.Build();
-
+app.UseRequestLocalization();
 
 // app.MapRpcCommandHandlers();
 app.MapDatabaseServersHandlers();

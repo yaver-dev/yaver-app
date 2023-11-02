@@ -6,7 +6,6 @@ using Admin.ApiBase.Model;
 using Admin.ServiceBase.DatabaseServers;
 
 
-
 using Grpc.Core;
 
 using Yaver.App;
@@ -21,21 +20,23 @@ public static class CreateDatabaseServer {
       var callOptions = new CallOptions()
         .SetContext(yaverContext, ct);
 
-      // var command = Map.ToCommand(req);
-
       var result = await Map.ToCommand(req)
         .RemoteExecuteAsync(callOptions);
 
-      // if (result.Status != ResultStatus.Ok) throw new Exception("TODO: handle this");
+      if (result.IsSuccess) {
+        var response = Map.ToResponse(result);
 
-      var response = Map.ToResponse(result);
+        await SendCreatedAtAsync<Endpoint>(
+          //TODO: convert  query param to route param
+          // bu arada apisix vs derken tam url i bilmiyoruz burada :thinking:
+          routeValues: response.Id,
+          responseBody: response,
+          cancellation: ct);
+      } else {
+        await SendResultAsync(result.ToHttpResponse());
+      }
 
-      await SendCreatedAtAsync<Endpoint>(
-        //TODO: convert  query param to route param
-        // bu arada apisix vs derken tam url i bilmiyoruz burada :thinking:
-        routeValues: response.Id,
-        responseBody: response,
-        cancellation: ct);
+
     }
   }
 

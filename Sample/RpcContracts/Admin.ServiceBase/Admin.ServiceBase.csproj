@@ -18,4 +18,8 @@
     <Using Include="System" />
     <Using Include="FastEndpoints" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../Src/App.Core/App.Core.csproj" />
+  </ItemGroup>
 </Project>

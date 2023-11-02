@@ -1,5 +1,7 @@
 
 
+using Yaver.App.Result;
+
 namespace Admin.ServiceBase.DatabaseServers;
 
 public sealed record ListDatabaseServersCommand(
@@ -7,7 +9,7 @@ public sealed record ListDatabaseServersCommand(
   int Limit,
   string Term,
   string Sort
-) : ICommand<DatabaseServerListResult>;
+) : ICommand<Result<DatabaseServerListResult>>;
 
 public sealed record DatabaseServerListResult(List<DatabaseServerListItem> Items, int? TotalCount = 0);
 

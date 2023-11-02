@@ -1,22 +1,18 @@
-using System.Linq.Expressions;
-
 using Admin.Service.Data;
 using Admin.ServiceBase.DatabaseServers;
-using Admin.Service.DatabaseServers.Entities;
 
 using Yaver.Db;
-using Yaver.App;
 using Microsoft.EntityFrameworkCore;
+using Yaver.App.Result;
 
 
 namespace Admin.Service.DatabaseServers;
 public static class ListDatabaseServers {
-  public sealed class Handler(ServiceDbContext db, IServiceProvider serviceProvider)
-        : ICommandHandler<ListDatabaseServersCommand, DatabaseServerListResult> {
-    //(serviceProvider) {
+  public sealed class Handler(ServiceDbContext db)
+        : ICommandHandler<ListDatabaseServersCommand, Result<DatabaseServerListResult>> {
     private readonly ServiceDbContext _db = db;
 
-    public async Task<DatabaseServerListResult> ExecuteAsync(
+    public async Task<Result<DatabaseServerListResult>> ExecuteAsync(
       ListDatabaseServersCommand command,
       CancellationToken ct) {
 

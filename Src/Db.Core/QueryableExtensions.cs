@@ -41,7 +41,7 @@ public static class QueryableExtensions {
     // var sort = command.Sort;
 
     if (!string.IsNullOrWhiteSpace(searchTerm)) {
-      filter = LinqHelper.BuildFilter<T>(searchTerm, [$"name", $"host"]);
+      filter = LinqHelper.BuildFilter<T>(searchTerm, ["name", "host"]);
     }
 
     #endregion

@@ -1,5 +1,3 @@
-using Yaver.App;
-
 public static class MainExtensions {
   //
   // Summary:

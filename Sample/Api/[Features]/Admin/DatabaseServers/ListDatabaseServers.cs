@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.Json;
 
 using Admin.ApiBase.EndpointBase.ListDatabaseServers;
 using Admin.ApiBase.Model;
@@ -18,10 +19,17 @@ public static class ListDatabaseServers {
       var callOptions = new CallOptions()
         .SetContext(yaverContext, ct);
 
-      var result = await Map.ToCommand(req)
+      var command = Map.ToCommand(req);
+      Console.WriteLine("command: " + JsonSerializer.Serialize(command));
+
+      var result = await command
         .RemoteExecuteAsync(callOptions);
 
-      await SendOkAsync(Map.ToResponse(result), cancellation: ct);
+      if (result.IsSuccess) {
+        await SendOkAsync(Map.ToResponse(result), cancellation: ct);
+      } else {
+        await SendNotFoundAsync(cancellation: ct);
+      }
     }
   }
 

@@ -6,16 +6,16 @@
 ## Products
 ### Create Product
 POST {{BaseUrl}}/database-servers
-Accept-Language: tr
+Accept-Language: en
 X-UserInfo: {{xUserInfo}}
 Content-Type: application/json
 {
 	"ConnectionStringFormat":"xxxxx",
-	"Host":"sadsadfdsa",
+	"Host":"sadsaddfssdsa",
 	"IsAvailable":true,
 	"IsDefault":true,
 	"Name":"231223",
-	"Port":2500
+	"Port":1222222
 }
 
 ### Get Products
@@ -30,7 +30,7 @@ Accept-Language: tr
 # Content-Type: application/json
 
 ### Get Product by Id
-GET {{BaseUrl}}/database-servers/f0ca5da7-92de-40b7-901b-0a0855a44178
+GET {{BaseUrl}}/database-servers/231d40c1-f675-47b0-ab22-37ca57c8e673
 accept: application/json
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
@@ -38,7 +38,7 @@ X-UserInfo: {{xUserInfo}}
 
 
 ### Update Product
-PUT {{BaseUrl}}/database-servers/f0ca5da7-92de-40b7-901b-0a0855a44178
+PUT {{BaseUrl}}/database-servers/fe0ae6f3-02dd-4d2b-9b9b-282b9151b441
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
 Content-Type: application/json
@@ -48,7 +48,7 @@ Content-Type: application/json
 	"IsAvailable":true,
 	"IsDefault":true,
 	"Name":"xdscasvasz",
-	"Port":5678
+	"Port":1765
 }
 
 ### Update Product Bad Request

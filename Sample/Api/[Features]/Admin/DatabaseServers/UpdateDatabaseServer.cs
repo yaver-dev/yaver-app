@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-using Admin.ApiBase.EndpointBase.UpdateDatabaseServer;
+﻿using Admin.ApiBase.EndpointBase.UpdateDatabaseServer;
 using Admin.ApiBase.Model;
 using Admin.ServiceBase.DatabaseServers;
 
@@ -22,11 +20,11 @@ public static class UpdateDatabaseServer {
       var result = await Map.ToCommand(req)
         .RemoteExecuteAsync(callOptions);
 
-      var response = Map.ToResponse(result);
-
-      await SendOkAsync(
-        response: response,
-        cancellation: ct);
+      if (result.IsSuccess) {
+        await SendOkAsync(Map.ToResponse(result), cancellation: ct);
+      } else {
+        await SendResultAsync(result.ToHttpResponse());
+      }
     }
   }
 

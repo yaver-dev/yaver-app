@@ -14,5 +14,6 @@
   <ItemGroup>
     <PackageReference Include="FastEndpoints" Version="5.*" />
     <PackageReference Include="FastEndpoints.Messaging.Remote" Version="5.*" />
+    <PackageReference Include="FluentValidation" Version="11.8.0" />
   </ItemGroup>
 </Project>

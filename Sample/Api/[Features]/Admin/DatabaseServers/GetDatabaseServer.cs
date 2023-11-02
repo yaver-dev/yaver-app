@@ -1,10 +1,6 @@
-﻿using System.Text.Json;
-
-using Admin.ApiBase.EndpointBase.GetDatabaseServer;
+﻿using Admin.ApiBase.EndpointBase.GetDatabaseServer;
 using Admin.ApiBase.Model;
 using Admin.ServiceBase.DatabaseServers;
-
-
 
 using Grpc.Core;
 
@@ -23,7 +19,11 @@ public static class GetDatabaseServer {
       var command = Map.ToCommand(req);
       var result = await command.RemoteExecuteAsync(callOptions);
 
-      await SendOkAsync(Map.ToResponse(result), cancellation: ct);
+      if (result.IsSuccess) {
+        await SendOkAsync(Map.ToResponse(result), cancellation: ct);
+      } else {
+        await SendResultAsync(result.ToHttpResponse());
+      }
     }
   }
 

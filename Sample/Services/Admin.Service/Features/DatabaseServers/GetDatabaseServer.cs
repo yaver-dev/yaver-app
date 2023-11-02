@@ -1,4 +1,4 @@
-using Admin.Service.Data;
+﻿using Admin.Service.Data;
 using Admin.ServiceBase.Features.DatabaseServers;
 
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +34,7 @@ public static class GetDatabaseServer {
         return Result<DatabaseServerResult>.NotFound();
       }
 
-      return entity;
+      return Result<DatabaseServerResult>.Success(entity);
     }
   }
 }

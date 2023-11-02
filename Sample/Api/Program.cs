@@ -23,7 +23,6 @@ builder.Services.Configure<JsonOptions>(o =>
 
 builder.Services.AddScoped<IYaverContext, YaverContext>();
 
-
 builder.Services
   .AddFastEndpoints(o => { o.IncludeAbstractValidators = true; })
   .AddAuthorization()
@@ -42,6 +41,7 @@ app
   .UseFastEndpoints(c => {
     c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
     c.Endpoints.Configurator = ep => {
+      //TODO remove before stable release
       ep.PreProcessors(Order.Before, new MyRequestLogger());
       // ep.PreProcessors(Order.Before, new YaverHttpProcessor());
       // ep.PreProcessors(Order.Before, new TenantPreProcessor());
@@ -49,7 +49,6 @@ app
   });
 
 app.MapAdminService("http://localhost:6000");
-
 
 app.Run();
 

@@ -1,4 +1,4 @@
-using Admin.ServiceBase.Features.DatabaseServers;
+﻿using Admin.ServiceBase.Features.DatabaseServers;
 
 using Yaver.App.Result;
 
@@ -11,7 +11,7 @@ public static class ModuleExtensions {
       h.Register<CreateDatabaseServerCommand, CreateDatabase.Handler, Result<DatabaseServerResult>>();
       h.Register<GetDatabaseServerCommand, GetDatabaseServer.Handler, Result<DatabaseServerResult>>();
       h.Register<UpdateDatabaseServerCommand, UpdateDatabaseServer.Handler, Result<DatabaseServerResult>>();
-      h.Register<DeleteDatabaseServerCommand, DeleteDatabaseServer.Handler, DeleteDatabaseServerResult>();
+      h.Register<DeleteDatabaseServerCommand, DeleteDatabaseServer.Handler, Result<DeleteDatabaseServerResult>>();
     });
 
     return app;

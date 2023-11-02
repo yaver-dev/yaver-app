@@ -1,5 +1,6 @@
 namespace Admin.Service; 
 
+//TODO: generic command handler registration extension methods must be implemented
 public static class MainExtensions {
   // private record Handler(Type command, Type handler, Type result);
   private static List<Handler> handlers = new();

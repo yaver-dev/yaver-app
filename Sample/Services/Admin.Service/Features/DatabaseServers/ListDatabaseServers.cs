@@ -1,4 +1,4 @@
-using Admin.Service.Data;
+﻿using Admin.Service.Data;
 using Admin.ServiceBase.Features.DatabaseServers;
 
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +16,8 @@ public static class ListDatabaseServers {
     public async Task<Result<DatabaseServerListResult>> ExecuteAsync(
       ListDatabaseServersCommand command,
       CancellationToken ct) {
+
+      //TODO: where fields hard coded, proper implementation needs to be done
       var (count, data) = await _db.DatabaseServers
         .PaginateAsync(command.Term, command.Sort, command.Offset, command.Limit);
 

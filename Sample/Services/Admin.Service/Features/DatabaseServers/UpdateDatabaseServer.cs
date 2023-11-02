@@ -1,4 +1,4 @@
-using Admin.Service.Data;
+﻿using Admin.Service.Data;
 using Admin.Service.Features.DatabaseServers.Entities;
 using Admin.ServiceBase.Features.DatabaseServers;
 
@@ -61,17 +61,12 @@ public static class UpdateDatabaseServer {
         return Result<DatabaseServerResult>.NotFound();
       }
 
-      //validate command
-      // return Result<DatabaseServerResult>.Invalid(validation.AsErrors());
-      UpdateEntity(command, entity);
+      entity = command.UpdateEntity(entity);
 
       db.DatabaseServers.Update(entity);
       await db.SaveChangesAsync(ct);
 
-      //TODO: buraya napmak lazim?
-      var result = await _getEntityForResultAsync(db, entity.Id, ct) ??
-                   throw new Exception("Database server not found.");
-      return result;
+      return (await _getEntityForResultAsync(db, entity.Id, ct))!;
     }
   }
 

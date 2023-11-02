@@ -17,8 +17,6 @@ builder.AddHandlerServer(
   options => {
     // options.Interceptors.Add<ServerLogInterceptor>();
     options.Interceptors.Add<ServerFeaturesInterceptor>();
-
-    // options.EnableMessageValidation();
   });
 
 builder.Services.AddScoped<IYaverContext, YaverContext>();
@@ -47,18 +45,10 @@ builder.Services.AddHttpContextAccessor();
 // }
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-// builder.Services.AddScoped<IValidator<CreateDatabaseServerCommand>, CreateDatabase.Validator>();
-
 
 //from lib
 // builder.Services.AddRpcCommandHandlers();
 // builder.Services.AddValidator<IdRequestValidator>();
-
-// builder.Services.AddDbContext<ServiceDbContext>(options => options.UseInMemoryDatabase("PIM"));
-
-// builder.Services.AddGrpcValidation();
-
-// builder.Services.AddSingleton<IValidatorErrorMessageHandler>(new CustomMessageHandler());
 
 var app = builder.Build();
 app.UseRequestLocalization();
@@ -66,23 +56,23 @@ app.UseRequestLocalization();
 // app.MapRpcCommandHandlers();
 app.MapDatabaseServersHandlers();
 
-
-var rInfo = new RequestInfo(
-    UserId: Guid.NewGuid(),
-    AcceptLanguage: "",
-    RequestId: "",
-    UserName: "",
-    Email: "",
-    GivenName: "",
-    FamilyName: "",
-    Roles:[],
-  TenantIdentifier: ""
-  );
-// using (var scope = app.Services.CreateScope()) {
-var context = new ServiceDbContext(app.Configuration, new YaverContext(rInfo));
+var context = new ServiceDbContext(app.Configuration,
+  new YaverContext(
+    new RequestInfo(
+      UserId: Guid.NewGuid(),
+      AcceptLanguage: "",
+      RequestId: "",
+      UserName: "",
+      Email: "",
+      GivenName: "",
+      FamilyName: "",
+      Roles: [],
+      TenantIdentifier: ""
+    )
+  )
+);
 
 
 context.Database.EnsureCreated();
-// }
 
 app.Run();

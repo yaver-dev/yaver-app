@@ -39,11 +39,14 @@ public static class CreateDatabase {
   }
 
   public sealed class Handler(
-      ServiceDbContext db, IValidator<CreateDatabaseServerCommand> validator)
+      ServiceDbContext db,
+      IValidator<CreateDatabaseServerCommand> validator
+    )
     : RpcCommandHandler<CreateDatabaseServerCommand, Result<DatabaseServerResult>> {
     public override async Task<Result<DatabaseServerResult>> ExecuteAsync(
       CreateDatabaseServerCommand command,
-      CancellationToken ct) {
+      CancellationToken ct
+    ) {
       //validate command
       var validationResult = await validator.ValidateAsync(command, ct);
 
@@ -56,11 +59,7 @@ public static class CreateDatabase {
       await db.DatabaseServers.AddAsync(entity, ct);
       await db.SaveChangesAsync(ct);
 
-      //TODO: buraya napmak lazim?
-      var result = await _getEntityForResultAsync(db, entity.Id, ct) ??
-                   throw new Exception("Database server not found.");
-
-      return result;
+      return (await _getEntityForResultAsync(db, entity.Id, ct))!;
     }
   }
 

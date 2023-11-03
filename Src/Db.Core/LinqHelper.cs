@@ -72,30 +72,4 @@ public static class LinqHelper {
     return Expression.Lambda<Func<T, bool>>(filterBody, parameterExpression);
   }
 
-  /// <summary>
-  /// Builds a string that represents the sorting criteria based on the given sort string and complex object map.
-  /// </summary>
-  /// <param name="sort">The sort string to be parsed.</param>
-  /// <param name="complexObjectMap">The dictionary that maps complex object properties to their corresponding simple properties.</param>
-  /// <returns>A string that represents the sorting criteria.</returns>
-  public static string? BuildSort(string sort, Dictionary<string, string> complexObjectMap) {
-    if (string.IsNullOrEmpty(sort)) return null;
-    var changedSortItems = new List<string>();
-    foreach (var item in sort.Split(",")) {
-      var complexObject = complexObjectMap
-          .FirstOrDefault(w => w.Key.Trim().Equals((item.StartsWith("-") ? item[1..] : item).Trim()));
-      if (complexObject.Value != null) {
-        var complexItems = complexObject.Value
-            .Split(",")
-            .Select(complexItem => (item.StartsWith("-") ? $"-{complexItem}" : complexItem)
-                .Trim())
-            .ToList();
-        changedSortItems.Add(string.Join(",", complexItems.ToArray<string>()));
-      } else {
-        changedSortItems.Add(item.Trim());
-      }
-    }
-
-    return string.Join(",", changedSortItems.ToArray<string>());
-  }
 }

@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "name": "C#: Api Debug",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/Sample/Api/Api.csproj"
+    },
+    {
+      "name": "C#: Service Debug",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/Sample/Services/Admin.Service/Admin.Service.csproj"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Both Console & Web API",
+      "configurations": ["C#: Api Debug", "C#: Service Debug"]
+    }
+  ]
+}

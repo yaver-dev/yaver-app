@@ -6,10 +6,6 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../Core/Core.csproj" />
-  </ItemGroup>
-
   <!-- EntityFrameworkCore -->
   <ItemGroup>
     <PackageReference Include="Audit.EntityFramework.Core" Version="21.0.4" />

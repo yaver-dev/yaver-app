@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "dotnet",
+      "task": "watch Api",
+      "file": "/Users/gurolg/W/Yaver/MinimalApi/Sample/Api/Api.csproj",
+      "problemMatcher": ["$msCompile"],
+      "label": "dotnet: watch Api",
+      "group": "build"
+    },
+    {
+      "type": "dotnet",
+      "task": "watch Admin.Service",
+      "file": "/Users/gurolg/W/Yaver/MinimalApi/Sample/Services/Admin.Service/Admin.Service.csproj",
+      "problemMatcher": ["$msCompile"],
+      "label": "dotnet: watch Admin.Service",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

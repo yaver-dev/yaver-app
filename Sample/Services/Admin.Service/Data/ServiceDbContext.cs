@@ -1,6 +1,5 @@
-using Admin.Service.Tenants.Entities;
-using Admin.Service.DatabaseServers.Entities;
-
+using Admin.Service.Features.DatabaseServers.Entities;
+using Admin.Service.Features.Tenants.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -9,15 +8,12 @@ using Yaver.Db;
 
 namespace Admin.Service.Data;
 
-public class ServiceDbContext : InMemoryDbContext
-{
+public class ServiceDbContext : InMemoryDbContext {
   private const string Schema = "multitenancy";
 
   public ServiceDbContext(IConfiguration configuration, IYaverContext yaverContext)
-        : base(yaverContext.RequestInfo.UserId)
-  {
+    : base(yaverContext.RequestInfo.UserId) {
     var connectionString = configuration.GetSection("ConnectionString").Value;
-
   }
 
 
@@ -25,8 +21,7 @@ public class ServiceDbContext : InMemoryDbContext
   public DbSet<Tenant> Tenants { get; set; }
 
 
-  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-  {
+  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
     optionsBuilder.UseInMemoryDatabase(Schema);
     // base.OnConfiguring(optionsBuilder);
     // var connStr = _configuration.GetSection("MainDbConnectionString").Value;
@@ -43,14 +38,11 @@ public class ServiceDbContext : InMemoryDbContext
     // }
   }
 
-  protected override void OnModelCreating(ModelBuilder builder)
-  {
+  protected override void OnModelCreating(ModelBuilder builder) {
     // base.OnModelCreating(builder);
 
     // builder.HasDefaultSchema(Schema);
-    // builder.ApplyConfiguration(new DatabaseServerEntityTypeConfiguration());
+    builder.ApplyConfiguration(new DatabaseServerEntityTypeConfiguration());
     // builder.ApplyConfiguration(new TenantEntityTypeConfiguration());
   }
 }
-
-

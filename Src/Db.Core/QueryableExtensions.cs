@@ -32,7 +32,8 @@ public static class QueryableExtensions {
       string? searchTerm = null,
       string? sort = null,
       int? offset = null,
-      int? limit = null
+      int? limit = null,
+      string[]? searchFields = null
   ) where T : class {
 
     #region filter
@@ -40,18 +41,8 @@ public static class QueryableExtensions {
     Expression<Func<T, bool>>? filter = null;
     // var sort = command.Sort;
 
-    if (!string.IsNullOrWhiteSpace(searchTerm)) {
-      filter = LinqHelper.BuildFilter<T>(searchTerm, ["name", "host"]);
-    }
-
-    #endregion
-
-    #region sorting
-    if (!string.IsNullOrWhiteSpace(sort)) {
-      sort = LinqHelper.BuildSort(
-        sort,
-        new Dictionary<string, string> { { "name", "host" } }
-      );
+    if (!string.IsNullOrWhiteSpace(searchTerm) && searchFields != null) {
+      filter = LinqHelper.BuildFilter<T>(searchTerm, searchFields);
     }
 
     #endregion
@@ -84,21 +75,9 @@ public static class QueryableExtensions {
     var count = await source.CountAsync();
 
     if (!string.IsNullOrEmpty(sort)) {
-      var then = false;
-      foreach (var item in sort.Split(",")) {
-        var desc = false;
-        var sortItem = item;
-        if (item.StartsWith("-")) {
-          sortItem = item[1..];
-          desc = true;
-        }
-
-        source = desc
-            ? source.OrderByPropertyDescending(sortItem, then)
-            : source.OrderByProperty(sortItem, then);
-
-        then = true;
-      }
+      source = sort.StartsWith("-")
+          ? source.OrderByPropertyDescending(sort[1..])
+          : source.OrderByProperty(sort);
     }
 
     source = source.Skip(itemIndex);

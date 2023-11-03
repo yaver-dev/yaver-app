@@ -17,9 +17,13 @@ public static class ListDatabaseServers {
       ListDatabaseServersCommand command,
       CancellationToken ct) {
 
-      //TODO: where fields hard coded, proper implementation needs to be done
       var (count, data) = await _db.DatabaseServers
-        .PaginateAsync(command.Term, command.Sort, command.Offset, command.Limit);
+        .PaginateAsync(
+        searchTerm: command.Term,
+        sort: command.Sort,
+        offset: command.Offset,
+        limit: command.Limit,
+        searchFields: ["name", "host"]);
 
       return new DatabaseServerListResult(
         TotalCount: count,

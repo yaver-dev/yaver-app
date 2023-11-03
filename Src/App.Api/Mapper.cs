@@ -58,7 +58,6 @@ public abstract class YaverMapper<TRequest, TResponse, TCommand, TResult> : IMap
   // public virtual TEntity UpdateEntity(TRequest r, TEntity e) => throw new NotImplementedException($"Please override the {nameof(UpdateEntity)} method!");
 
 
-  // TODO: bunlari kapadim ama basimiza dert olmasin
 
   // ///<inheritdoc/>
   // public TService? TryResolve<TService>() where TService : class => Conf.ServiceResolver.TryResolve<TService>();

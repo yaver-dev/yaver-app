@@ -11,7 +11,7 @@ public static class ModuleExtensions {
       h.Register<CreateDatabaseServerCommand, CreateDatabase.Handler, Result<DatabaseServerResult>>();
       h.Register<GetDatabaseServerCommand, GetDatabaseServer.Handler, Result<DatabaseServerResult>>();
       h.Register<UpdateDatabaseServerCommand, UpdateDatabaseServer.Handler, Result<DatabaseServerResult>>();
-      h.Register<DeleteDatabaseServerCommand, DeleteDatabaseServer.Handler, Result<DeleteDatabaseServerResult>>();
+      h.Register<DeleteDatabaseServerCommand, DeleteDatabaseServer.Handler, Result>();
     });
 
     return app;

@@ -4,8 +4,8 @@ namespace Admin.ServiceBase.Features.DatabaseServers;
 
 public record DeleteDatabaseServerCommand(
   Guid Id
-) : ICommand<Result<DeleteDatabaseServerResult>>;
+) : ICommand<Result>;
 
-public record DeleteDatabaseServerResult(
-  Guid Id
-);
+// public record DeleteDatabaseServerResult(
+//   Guid Id
+// );

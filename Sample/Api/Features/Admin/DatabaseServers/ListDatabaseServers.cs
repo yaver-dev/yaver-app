@@ -27,7 +27,7 @@ public static class ListDatabaseServers {
       if (result.IsSuccess) {
         await SendOkAsync(Map.ToResponse(result), ct);
       } else {
-        await SendNotFoundAsync(ct);
+        await SendResultAsync(result.ToHttpResponse());
       }
     }
   }

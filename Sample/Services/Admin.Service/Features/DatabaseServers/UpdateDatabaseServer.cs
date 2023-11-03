@@ -58,7 +58,7 @@ public static class UpdateDatabaseServer {
       var entity = await _getEntityForUpdateAsync(db, command.Id, ct);
 
       if (entity is null) {
-        return Result<DatabaseServerResult>.NotFound();
+        return Result<DatabaseServerResult>.NotFound("Requested Resource Not Found");
       }
 
       entity = command.UpdateEntity(entity);

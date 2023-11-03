@@ -5,6 +5,7 @@ using Admin.ServiceBase.Features.DatabaseServers;
 using Grpc.Core;
 
 using Yaver.App;
+using Yaver.App.Result;
 
 namespace Api.Features.Admin.DatabaseServers;
 
@@ -18,20 +19,20 @@ public static class DeleteDatabaseServer {
       var result = await Map.ToCommand(req)
         .RemoteExecuteAsync(callOptions);
 
-      await SendOkAsync(Map.ToResponse(result), ct);
+      if (result.IsSuccess) {
+        await SendNoContentAsync(ct);
+      } else {
+        await SendResultAsync(result.ToHttpResponse());
+      }
     }
   }
 
-  //TODO: public cunkuuuuu bkz: line 16
   public sealed class Mapper
     : YaverMapper<DeleteDatabaseServerRequest, DatabaseServerViewModel, DeleteDatabaseServerCommand,
-      DeleteDatabaseServerResult> {
+      Result> {
     public override DeleteDatabaseServerCommand ToCommand(DeleteDatabaseServerRequest r) {
       return new DeleteDatabaseServerCommand(r.Id);
     }
 
-    public override DatabaseServerViewModel ToResponse(DeleteDatabaseServerResult r) {
-      return new DatabaseServerViewModel { Id = r.Id };
-    }
   }
 }

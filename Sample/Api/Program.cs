@@ -50,11 +50,14 @@ app
 
 app.MapAdminService("http://localhost:6000");
 
+
+
+
 app.Run();
 
 
-namespace Api
-{
+
+namespace Api {
   public class MyRequestLogger : IGlobalPreProcessor {
     public async Task PreProcessAsync(object req, HttpContext ctx, List<ValidationFailure> failures,
       CancellationToken ct) {

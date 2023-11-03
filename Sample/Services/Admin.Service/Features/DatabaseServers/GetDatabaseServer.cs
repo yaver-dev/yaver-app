@@ -31,7 +31,7 @@ public static class GetDatabaseServer {
       var entity = await _getEntityForResultAsync(db, command.Id, ct);
 
       if (entity is null) {
-        return Result<DatabaseServerResult>.NotFound();
+        return Result<DatabaseServerResult>.NotFound("Requested Resource Not Found");
       }
 
       return Result<DatabaseServerResult>.Success(entity);

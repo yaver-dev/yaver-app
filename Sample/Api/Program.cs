@@ -49,7 +49,7 @@ app
     };
   });
 
-app.MapAdminService("http://localhost:5201");
+app.MapAdminService();
 
 
 

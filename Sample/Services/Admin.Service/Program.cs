@@ -5,14 +5,13 @@ using Admin.Service.Features.DatabaseServers;
 
 using FluentValidation;
 
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-
 using Yaver.App;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddYaverLogger();
 
 // Accept only HTTP/2 to allow insecure connections for development.
-builder.WebHost.ConfigureKestrel(o => o.ListenAnyIP(6000, c => c.Protocols = HttpProtocols.Http2));
+// builder.WebHost.ConfigureKestrel(o => o.ListenAnyIP(6000, c => c.Protocols = HttpProtocols.Http2));
 builder.AddHandlerServer(
   options => {
     // options.Interceptors.Add<ServerLogInterceptor>();

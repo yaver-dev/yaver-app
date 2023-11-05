@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Yaver.App;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddYaverLogger();
 
 builder.Services.Configure<JsonOptions>(o =>
   o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
@@ -48,7 +49,7 @@ app
     };
   });
 
-app.MapAdminService("http://localhost:6000");
+app.MapAdminService("http://localhost:5201");
 
 
 

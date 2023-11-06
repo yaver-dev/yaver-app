@@ -28,9 +28,9 @@ builder.Services.AddScoped<IYaverContext, YaverContext>();
 builder.Services
   .AddFastEndpoints(o => { o.IncludeAbstractValidators = true; })
   .AddAuthorization()
-  .AddAuthentication(XUserInfoAuthenticationHandler.SchemeName)
-  .AddScheme<AuthenticationSchemeOptions, XUserInfoAuthenticationHandler>(
-    XUserInfoAuthenticationHandler.SchemeName,
+  .AddAuthentication(UserInfoAuthenticationHandler.SchemaName)
+  .AddScheme<AuthenticationSchemeOptions, UserInfoAuthenticationHandler>(
+    UserInfoAuthenticationHandler.SchemaName,
     null
   );
 
@@ -39,7 +39,7 @@ var app = builder.Build();
 app
   .UseYaverExceptionHandler(logStructuredException: true)
   .UseAuthentication()
-  .UseAuthorization()
+  .UseAuthorization()            
   .UseFastEndpoints(c => {
     c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
     c.Endpoints.Configurator = ep => {

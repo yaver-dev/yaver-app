@@ -3,6 +3,7 @@ using Admin.ServiceBase.Features.DatabaseServers;
 
 using Microsoft.EntityFrameworkCore;
 
+using Yaver.App;
 using Yaver.App.Result;
 
 namespace Admin.Service.Features.DatabaseServers;
@@ -24,8 +25,8 @@ public static class GetDatabaseServer {
           .FirstOrDefault(c => c.Id == id));
 
   public sealed class Handler(ServiceDbContext db)
-    : ICommandHandler<GetDatabaseServerCommand, Result<DatabaseServerResult>> {
-    public async Task<Result<DatabaseServerResult>> ExecuteAsync(
+    : RpcCommandHandler<GetDatabaseServerCommand, Result<DatabaseServerResult>> {
+    public override async Task<Result<DatabaseServerResult>> ExecuteAsync(
       GetDatabaseServerCommand command,
       CancellationToken ct) {
       var entity = await _getEntityForResultAsync(db, command.Id, ct);

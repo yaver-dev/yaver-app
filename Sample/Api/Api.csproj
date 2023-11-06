@@ -6,34 +6,34 @@
   </PropertyGroup>
   <!-- FastEndpoints -->
   <ItemGroup>
-    <PackageReference Include="FastEndpoints" Version="5.*"/>
-    <PackageReference Include="FastEndpoints.Messaging.Remote" Version="5.*"/>
+    <PackageReference Include="FastEndpoints" Version="5.*" />
+    <PackageReference Include="FastEndpoints.Messaging.Remote" Version="5.*" />
   </ItemGroup>
 
   <!-- Yaver -->
   <ItemGroup>
-    <ProjectReference Include="../../Src/App.Api/App.Api.csproj"/>
+    <ProjectReference Include="../../Src/App.Api/App.Api.csproj" />
   </ItemGroup>
 
   <!-- Rest Bases -->
   <ItemGroup>
     <ProjectReference
-      Include="../RestContracts/admin-api-oas/out/yaver-cs-fastendpoints/src/Admin.ApiBase/Admin.ApiBase.csproj"/>
-    <ProjectReference Include="../RpcContracts/Admin.ServiceBase/Admin.ServiceBase.csproj"/>
+      Include="../RestContracts/admin-api-oas/out/yaver-cs-fastendpoints/src/Admin.ApiBase/Admin.ApiBase.csproj" />
+    <ProjectReference Include="../RpcContracts/Admin.ServiceBase/Admin.ServiceBase.csproj" />
   </ItemGroup>
 
   <!-- Service Bases -->
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
   </ItemGroup>
 
   <!-- Global Usings -->
   <ItemGroup>
-    <Using Include="FastEndpoints"/>
-    <Using Include="System"/>
-    <Using Include="System.Threading"/>
-    <Using Include="System.Threading.Tasks"/>
+    <Using Include="FastEndpoints" />
+    <Using Include="System" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
   </ItemGroup>
 </Project>

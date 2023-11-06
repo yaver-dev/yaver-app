@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 
 using Admin.Service.Data;
-using Admin.Service.Features.DatabaseServers;
 
 using FluentValidation;
 
@@ -31,17 +30,6 @@ builder.Services.Configure<RequestLocalizationOptions>(options => {
 
 builder.Services.AddHttpContextAccessor();
 
-// add  all IMapper implementations in the assembly
-
-// var mappers = AppDomain.CurrentDomain.GetAssemblies()
-//            .SelectMany(s => s.GetTypes())
-//            .Where(t => t.GetInterfaces().Contains(typeof(IMapper)))
-//            .Where(t => !t.IsInterface && !t.IsAbstract);
-
-// foreach (var mapper in mappers) {
-//   // Console.WriteLine($"registered {mapper.ToString()}");
-//   builder.Services.AddSingleton(mapper, mapper);
-// }
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -53,7 +41,7 @@ var app = builder.Build();
 app.UseRequestLocalization();
 
 // app.MapRpcCommandHandlers();
-app.MapDatabaseServersHandlers();
+app.RegisterRpcCommandHandlers();
 
 var context = new ServiceDbContext(app.Configuration,
   new YaverContext(

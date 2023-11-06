@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Yaver.App;
@@ -49,7 +50,9 @@ app
     };
   });
 
-app.MapAdminService();
+app.MapRpcHandlers(
+  "Admin.ServiceBase",
+  app.Configuration.GetSection("Services").GetValue<string>("ADMIN"));
 
 
 

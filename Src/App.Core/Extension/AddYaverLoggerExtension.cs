@@ -7,7 +7,7 @@ namespace Yaver.App;
 /// <summary>
 /// Provides extension methods for configuring logging in a <see cref="Microsoft.AspNetCore.Builder.WebApplication"/>.
 /// </summary>
-public static partial class ServiceCollectionExtensionsLogging {
+public static partial class AddYaverLoggerExtension {
   /// <summary>
   /// Provides a way to configure a <see cref="Microsoft.AspNetCore.Builder.WebApplication"/>.
   /// </summary>
@@ -35,7 +35,7 @@ public static partial class ServiceCollectionExtensionsLogging {
   //     }
   //   });
   //   return builder;
-  // }
+  // }w
 }
 
 // public class LogWrapperDestructuringPolicy : IDestructuringPolicy {

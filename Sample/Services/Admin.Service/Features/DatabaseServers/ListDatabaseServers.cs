@@ -3,6 +3,7 @@ using Admin.ServiceBase.Features.DatabaseServers;
 
 using Microsoft.EntityFrameworkCore;
 
+using Yaver.App;
 using Yaver.App.Result;
 using Yaver.Db;
 
@@ -10,10 +11,10 @@ namespace Admin.Service.Features.DatabaseServers;
 
 public static class ListDatabaseServers {
   public sealed class Handler(ServiceDbContext db)
-    : ICommandHandler<ListDatabaseServersCommand, Result<DatabaseServerListResult>> {
+    : RpcCommandHandler<ListDatabaseServersCommand, Result<DatabaseServerListResult>> {
     private readonly ServiceDbContext _db = db;
 
-    public async Task<Result<DatabaseServerListResult>> ExecuteAsync(
+    public override async Task<Result<DatabaseServerListResult>> ExecuteAsync(
       ListDatabaseServersCommand command,
       CancellationToken ct) {
 

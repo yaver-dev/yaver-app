@@ -1,3 +1,4 @@
+using Yaver.App;
 using Yaver.App.Result;
 
 namespace Admin.ServiceBase.Features.DatabaseServers;
@@ -10,4 +11,4 @@ public record UpdateDatabaseServerCommand(
   string ConnectionStringFormat,
   bool IsDefault,
   DatabaseServerStatus Status
-) : ICommand<Result<DatabaseServerResult>>;
+) : IRpcCommand<Result<DatabaseServerResult>>;

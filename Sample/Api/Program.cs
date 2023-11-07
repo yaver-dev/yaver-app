@@ -12,11 +12,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Yaver.App;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddYaverLogger();
 
 builder.Services.Configure<JsonOptions>(o =>
   o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
@@ -26,9 +28,9 @@ builder.Services.AddScoped<IYaverContext, YaverContext>();
 builder.Services
   .AddFastEndpoints(o => { o.IncludeAbstractValidators = true; })
   .AddAuthorization()
-  .AddAuthentication(XUserInfoAuthenticationHandler.SchemeName)
-  .AddScheme<AuthenticationSchemeOptions, XUserInfoAuthenticationHandler>(
-    XUserInfoAuthenticationHandler.SchemeName,
+  .AddAuthentication(UserInfoAuthenticationHandler.SchemaName)
+  .AddScheme<AuthenticationSchemeOptions, UserInfoAuthenticationHandler>(
+    UserInfoAuthenticationHandler.SchemaName,
     null
   );
 
@@ -37,7 +39,7 @@ var app = builder.Build();
 app
   .UseYaverExceptionHandler(logStructuredException: true)
   .UseAuthentication()
-  .UseAuthorization()
+  .UseAuthorization()            
   .UseFastEndpoints(c => {
     c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
     c.Endpoints.Configurator = ep => {
@@ -48,7 +50,9 @@ app
     };
   });
 
-app.MapAdminService("http://localhost:6000");
+app.MapRpcHandlers(
+  "Admin.ServiceBase",
+  app.Configuration.GetSection("Services").GetValue<string>("ADMIN"));
 
 
 

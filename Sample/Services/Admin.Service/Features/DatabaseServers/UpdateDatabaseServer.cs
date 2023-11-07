@@ -6,6 +6,7 @@ using FluentValidation;
 
 using Microsoft.EntityFrameworkCore;
 
+using Yaver.App;
 using Yaver.App.Result;
 
 namespace Admin.Service.Features.DatabaseServers;
@@ -46,8 +47,8 @@ public static class UpdateDatabaseServer {
   public sealed class Handler(
       ServiceDbContext db,
       IValidator<UpdateDatabaseServerCommand> validator)
-    : ICommandHandler<UpdateDatabaseServerCommand, Result<DatabaseServerResult>> {
-    public async Task<Result<DatabaseServerResult>> ExecuteAsync(UpdateDatabaseServerCommand command,
+    : RpcCommandHandler<UpdateDatabaseServerCommand, Result<DatabaseServerResult>> {
+    public override async Task<Result<DatabaseServerResult>> ExecuteAsync(UpdateDatabaseServerCommand command,
       CancellationToken ct) {
       var validationResult = validator.Validate(command);
 

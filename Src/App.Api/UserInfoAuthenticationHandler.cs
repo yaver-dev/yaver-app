@@ -13,13 +13,13 @@ namespace Yaver.App;
 /// <summary>
 /// Authentication handler for authenticating the user's credentials based on the provided X-User-Info header.
 /// </summary>
-public class XUserInfoAuthenticationHandler(
+public class UserInfoAuthenticationHandler(
   IOptionsMonitor<AuthenticationSchemeOptions> options,
   ILoggerFactory logger,
   UrlEncoder encoder,
-  ISystemClock clock) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder, clock) {
-
-  public const string SchemeName = "X-Userinfo";
+  ISystemClock clock
+) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder, clock) {
+  public const string SchemaName = "UserInfo";
   internal const string RoleType = "roles";
 
   /// <summary>
@@ -28,30 +28,30 @@ public class XUserInfoAuthenticationHandler(
   /// <returns>A task that represents the asynchronous operation. The task result contains the authentication result.</returns>
   protected override Task<AuthenticateResult> HandleAuthenticateAsync() {
     if (Context
-      .GetEndpoint()?
-      .Metadata.OfType<AllowAnonymousAttribute>()
-      .Any() is null or true) {
+          .GetEndpoint()?
+          .Metadata.OfType<AllowAnonymousAttribute>()
+          .Any() is null or true) {
       return Task.FromResult(AuthenticateResult.NoResult());
     }
 
-    string xUserInfo = Request.Headers[SchemeName]!;
+    string xUserInfo = Request.Headers[$"X-{SchemaName}"]!;
 
     if (string.IsNullOrEmpty(xUserInfo))
-      return Task.FromResult(AuthenticateResult.Fail($"{SchemeName} header not found"));
+      return Task.FromResult(AuthenticateResult.Fail($"{SchemaName} header not found"));
 
 
     var payload = JwtPayload.Base64UrlDeserialize(xUserInfo) ?? throw new ArgumentException(null, "payload");
 
     ClaimsIdentity identity = new(
       claims: payload.Claims,
-      authenticationType: SchemeName,
+      authenticationType: SchemaName,
       nameType: "name",
       roleType: RoleType);
 
     AuthenticationTicket ticket = new(
       principal: new ClaimsPrincipal(identity),
       properties: new AuthenticationProperties(),
-      authenticationScheme: SchemeName);
+      authenticationScheme: SchemaName);
 
 
     var x = new RequestInfo(
@@ -65,7 +65,7 @@ public class XUserInfoAuthenticationHandler(
         .Where(c => c.Type == RoleType)
         .Select(c => c.Value).ToList(),
       Email: payload.FirstOrDefault(p => p.Key == "email").Value?.ToString() ?? "",
-      TenantIdentifier: Request.Headers["x-tenan-id"].FirstOrDefault() ?? ""
+      TenantIdentifier: Request.Headers["x-tenant-id"].FirstOrDefault() ?? ""
     );
 
     Context.Features.Set(x);

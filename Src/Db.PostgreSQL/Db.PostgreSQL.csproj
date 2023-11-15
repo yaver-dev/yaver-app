@@ -3,7 +3,6 @@
   <PropertyGroup>
     <AssemblyName>Yaver.Db.PostgreSQL</AssemblyName>
     <RootNamespace>Yaver.Db</RootNamespace>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +12,8 @@
   <!-- PostgreSQL -->
   <ItemGroup>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-rc.2" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="8.0.0-rc.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite"
+      Version="8.0.0-rc.2" />
   </ItemGroup>
 
 </Project>

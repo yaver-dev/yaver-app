@@ -3,7 +3,6 @@
   <PropertyGroup>
     <AssemblyName>Yaver.App.Service</AssemblyName>
     <RootNamespace>Yaver.App</RootNamespace>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

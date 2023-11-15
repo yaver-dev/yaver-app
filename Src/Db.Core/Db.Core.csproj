@@ -3,15 +3,14 @@
   <PropertyGroup>
     <AssemblyName>Yaver.Db.Core</AssemblyName>
     <RootNamespace>Yaver.Db</RootNamespace>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <!-- EntityFrameworkCore -->
   <ItemGroup>
-    <PackageReference Include="Audit.EntityFramework.Core" Version="21.1.0" />
+    <PackageReference Include="Audit.EntityFramework.Core" Version="22.0.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="8.0.0-rc.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-rc.2.23480.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0-rc.2.23480.1">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

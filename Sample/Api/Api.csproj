@@ -17,15 +17,14 @@
 
   <!-- Rest Bases -->
   <ItemGroup>
-    <ProjectReference
-      Include="../RestContracts/admin-api-oas/out/yaver-cs-fastendpoints/src/Admin.ApiBase/Admin.ApiBase.csproj" />
+    <ProjectReference Include="../RestContracts/admin-api-oas/out/yaver-cs-fastendpoints/src/Admin.ApiBase/Admin.ApiBase.csproj" />
     <ProjectReference Include="../RpcContracts/Admin.ServiceBase/Admin.ServiceBase.csproj" />
   </ItemGroup>
 
   <!-- Service Bases -->
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0-rc.2.23480.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
   </ItemGroup>
 

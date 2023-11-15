@@ -3,7 +3,6 @@
   <PropertyGroup>
     <AssemblyName>Yaver.Db.InMemory</AssemblyName>
     <RootNamespace>Yaver.Db</RootNamespace>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +11,7 @@
 
   <!-- EntityFramework  -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0-rc.2.23480.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

@@ -3,13 +3,12 @@
   <PropertyGroup>
     <AssemblyName>Yaver.App.Core</AssemblyName>
     <RootNamespace>Yaver.App</RootNamespace>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
 
   <!-- Serilog -->
   <ItemGroup>
-    <PackageReference Include="Serilog.Aspnetcore" Version="7.0.0" />
+    <PackageReference Include="Serilog.Aspnetcore" Version="8.0.0" />
     <PackageReference Include="Serilog.Formatting.Elasticsearch" Version="9.0.3" />
   </ItemGroup>
 

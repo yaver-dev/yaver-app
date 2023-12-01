@@ -6,8 +6,8 @@
   </PropertyGroup>
   <!-- FastEndpoints -->
   <ItemGroup>
-    <PackageReference Include="FastEndpoints" Version="5.*" />
-    <PackageReference Include="FastEndpoints.Messaging.Remote" Version="5.*" />
+    <PackageReference Include="FastEndpoints" Version="5.20.0" />
+    <PackageReference Include="FastEndpoints.Messaging.Remote" Version="5.20.0" />
   </ItemGroup>
 
   <!-- Yaver -->
@@ -17,7 +17,8 @@
 
   <!-- Rest Bases -->
   <ItemGroup>
-    <ProjectReference Include="../RestContracts/admin-api-oas/out/yaver-cs-fastendpoints/src/Admin.ApiBase/Admin.ApiBase.csproj" />
+    <ProjectReference
+      Include="../RestContracts/admin-api-oas/out/yaver-cs-fastendpoints/src/Admin.ApiBase/Admin.ApiBase.csproj" />
     <ProjectReference Include="../RpcContracts/Admin.ServiceBase/Admin.ServiceBase.csproj" />
   </ItemGroup>
 

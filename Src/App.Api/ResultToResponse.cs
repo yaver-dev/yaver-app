@@ -4,13 +4,17 @@ using Microsoft.AspNetCore.Http;
 
 namespace Yaver.App;
 
+/// <summary>
+///   Provides extension methods to convert a <see cref="Result{T}" /> object to an HTTP response.
+/// </summary>
 public static class ResultToResponse {
+
   /// <summary>
-  ///   Converts a <see cref="Result{T}" /> object to an HTTP response.
+  /// Converts a <see cref="Result{T}"/> object to an <see cref="Microsoft.AspNetCore.Http.IResult"/> object based on the result status.
   /// </summary>
   /// <typeparam name="T">The type of the result value.</typeparam>
-  /// <param name="result">The result object to convert.</param>
-  /// <returns>An <see cref="Microsoft.AspNetCore.Http.IResult" /> representing the converted HTTP response.</returns>
+  /// <param name="result">The <see cref="Result{T}"/> object to convert.</param>
+  /// <returns>An <see cref="Microsoft.AspNetCore.Http.IResult"/> object representing the converted result.</returns>
   public static Microsoft.AspNetCore.Http.IResult ToHttpResponse<T>(this Result<T> result) {
     return result.Status switch {
       ResultStatus.NotFound => NotFoundEntity(result),
@@ -26,58 +30,38 @@ public static class ResultToResponse {
   }
 
   /// <summary>
-  ///   Creates a <see cref="Microsoft.AspNetCore.Http.IResult" /> representing a not found entity.
+  /// Represents a problem details object that provides additional information about an error or problem.
   /// </summary>
-  /// <param name="result">The result containing the errors.</param>
-  /// <returns>A <see cref="Microsoft.AspNetCore.Http.IResult" /> representing a not found entity.</returns>
-  private static Microsoft.AspNetCore.Http.IResult NotFoundEntity(IResult result) {
-    return new ProblemDetails(
+  private static ProblemDetails NotFoundEntity(IResult result) => new(
       result.Errors.Select(e => new ValidationFailure("", e)).ToList(),
       StatusCodes.Status404NotFound);
-  }
+
 
   /// <summary>
-  ///   Converts the given <see cref="IResult" /> to an HTTP 422 Unprocessable Entity response.
+  /// Represents a problem details object that provides additional information about an error.
   /// </summary>
-  /// <param name="result">The result to convert.</param>
-  /// <returns>An HTTP 422 Unprocessable Entity response.</returns>
-  private static Microsoft.AspNetCore.Http.IResult UnprocessableEntity(IResult result) {
-    return new ProblemDetails(
+  private static ProblemDetails UnprocessableEntity(IResult result) => new(
       result.Errors.Select(e => new ValidationFailure("", e)).ToList(),
       StatusCodes.Status422UnprocessableEntity);
-  }
 
   /// <summary>
-  ///   Creates a conflict response with the specified result.
+  /// Represents a problem details object that provides additional information about an error.
   /// </summary>
-  /// <param name="result">The result containing the errors.</param>
-  /// <returns>A conflict response with the specified result.</returns>
-  private static Microsoft.AspNetCore.Http.IResult ConflictEntity(IResult result) {
-    return new ProblemDetails(
+  private static ProblemDetails ConflictEntity(IResult result) => new(
       result.Errors.Select(e => new ValidationFailure("", e)).ToList(),
       StatusCodes.Status409Conflict);
-  }
 
   /// <summary>
-  ///   Converts the given <see cref="IResult" /> to a critical entity <see cref="IResult" />.
+  /// Represents a problem details object that provides additional information about an error.
   /// </summary>
-  /// <param name="result">The result to convert.</param>
-  /// <returns>A critical entity <see cref="IResult" />.</returns>
-  private static Microsoft.AspNetCore.Http.IResult CriticalEntity(IResult result) {
-    return new ProblemDetails(
+  private static ProblemDetails CriticalEntity(IResult result) => new(
       result.Errors.Select(e => new ValidationFailure("", e)).ToList(),
       StatusCodes.Status500InternalServerError);
-  }
 
   /// <summary>
-  ///   Converts an <see cref="IResult" /> to a <see cref="Microsoft.AspNetCore.Http.IResult" /> with a 503 Service
-  ///   Unavailable status code.
+  /// Represents a problem details object that provides additional information about an error.
   /// </summary>
-  /// <param name="result">The result to convert.</param>
-  /// <returns>A <see cref="Microsoft.AspNetCore.Http.IResult" /> with a 503 Service Unavailable status code.</returns>
-  private static Microsoft.AspNetCore.Http.IResult UnavailableEntity(IResult result) {
-    return new ProblemDetails(
+  private static ProblemDetails UnavailableEntity(IResult result) => new(
       result.Errors.Select(e => new ValidationFailure("", e)).ToList(),
       StatusCodes.Status503ServiceUnavailable);
-  }
 }

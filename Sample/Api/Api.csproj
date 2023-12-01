@@ -6,8 +6,8 @@
   </PropertyGroup>
   <!-- FastEndpoints -->
   <ItemGroup>
-    <PackageReference Include="FastEndpoints" Version="5.20.0" />
-    <PackageReference Include="FastEndpoints.Messaging.Remote" Version="5.20.0" />
+    <PackageReference Include="FastEndpoints" Version="5.20.1" />
+    <PackageReference Include="FastEndpoints.Messaging.Remote" Version="5.20.1" />
   </ItemGroup>
 
   <!-- Yaver -->

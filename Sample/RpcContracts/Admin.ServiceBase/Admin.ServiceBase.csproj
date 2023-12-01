@@ -10,7 +10,7 @@
 
   <!-- FastEndpoints -->
   <ItemGroup>
-    <PackageReference Include="FastEndpoints.Messaging.Core" Version="5.20.0" />
+    <PackageReference Include="FastEndpoints.Messaging.Core" Version="5.20.1" />
   </ItemGroup>
 
   <!-- Global Usings -->

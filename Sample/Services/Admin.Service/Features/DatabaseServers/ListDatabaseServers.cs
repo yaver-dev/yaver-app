@@ -4,17 +4,16 @@ using Admin.ServiceBase.Features.DatabaseServers;
 using Microsoft.EntityFrameworkCore;
 
 using Yaver.App;
-using Yaver.App.Result;
 using Yaver.Db;
 
 namespace Admin.Service.Features.DatabaseServers;
 
 public static class ListDatabaseServers {
   public sealed class Handler(ServiceDbContext db)
-    : RpcCommandHandler<ListDatabaseServersCommand, Result<DatabaseServerListResult>> {
+    : RpcCommandHandler<ListDatabaseServersCommand, PagedResult<DatabaseServerListItem>> {
     private readonly ServiceDbContext _db = db;
 
-    public override async Task<Result<DatabaseServerListResult>> ExecuteAsync(
+    public override async Task<PagedResult<DatabaseServerListItem>> ExecuteAsync(
       ListDatabaseServersCommand command,
       CancellationToken ct) {
 
@@ -26,9 +25,9 @@ public static class ListDatabaseServers {
         limit: command.Limit,
         searchFields: ["name", "host"]);
 
-      return new DatabaseServerListResult(
-        TotalCount: count,
-        Items: await data.Select(x => new DatabaseServerListItem(
+      return new PagedResult<DatabaseServerListItem>(
+         totalCount: count,
+           items: await data.Select(x => new DatabaseServerListItem(
             x.Id.ToString(),
             x.Host,
             x.Port,

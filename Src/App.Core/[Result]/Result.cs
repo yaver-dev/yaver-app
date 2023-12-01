@@ -109,22 +109,22 @@ public class Result<T> : IResult {
     };
   }
 
-  /// <summary>
-  ///   Converts PagedInfo into a PagedResult<typeparamref name="T" />
-  /// </summary>
-  /// <param name="pagedInfo"></param>
-  /// <returns></returns>
-  public PagedResult<T> ToPagedResult(PagedInfo pagedInfo) {
-    var pagedResult = new PagedResult<T>(pagedInfo, Value) {
-      Status = Status,
-      SuccessMessage = SuccessMessage,
-      CorrelationId = CorrelationId,
-      Errors = Errors,
-      ValidationErrors = ValidationErrors
-    };
+  // /// <summary>
+  // ///   Converts PagedInfo into a PagedResult<typeparamref name="T" />
+  // /// </summary>
+  // /// <param name="pagedInfo"></param>
+  // /// <returns></returns>
+  // public PagedResult<List<T>> ToPagedResult(int totalCount) {
+  //   var pagedResult = new PagedResult<List<T>>(totalCount, Value) {
+  //     Status = Status,
+  //     SuccessMessage = SuccessMessage,
+  //     CorrelationId = CorrelationId,
+  //     Errors = Errors,
+  //     ValidationErrors = ValidationErrors
+  //   };
 
-    return pagedResult;
-  }
+  //   return pagedResult;
+  // }
 
   /// <summary>
   ///   Represents a successful operation and accepts a values as the result of the operation

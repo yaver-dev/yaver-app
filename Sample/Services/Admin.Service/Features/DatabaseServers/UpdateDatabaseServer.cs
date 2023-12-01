@@ -7,11 +7,11 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 using Yaver.App;
-using Yaver.App.Result;
 
 namespace Admin.Service.Features.DatabaseServers;
 
-public static class UpdateDatabaseServer {
+public static class UpdateDatabaseServer
+{
   private static readonly Func<ServiceDbContext, Guid, CancellationToken, Task<DatabaseServer?>>
     _getEntityForUpdateAsync =
       EF.CompileAsyncQuery((ServiceDbContext context, Guid id, CancellationToken ct) =>
@@ -34,7 +34,8 @@ public static class UpdateDatabaseServer {
           ))
           .FirstOrDefault(c => c.Id == id));
 
-  private static DatabaseServer UpdateEntity(this UpdateDatabaseServerCommand r, DatabaseServer e) {
+  private static DatabaseServer UpdateEntity(this UpdateDatabaseServerCommand r, DatabaseServer e)
+  {
     e.Host = r.Host;
     e.Port = r.Port;
     e.Name = r.Name;
@@ -47,18 +48,22 @@ public static class UpdateDatabaseServer {
   public sealed class Handler(
       ServiceDbContext db,
       IValidator<UpdateDatabaseServerCommand> validator)
-    : RpcCommandHandler<UpdateDatabaseServerCommand, Result<DatabaseServerResult>> {
+    : RpcCommandHandler<UpdateDatabaseServerCommand, Result<DatabaseServerResult>>
+  {
     public override async Task<Result<DatabaseServerResult>> ExecuteAsync(UpdateDatabaseServerCommand command,
-      CancellationToken ct) {
+      CancellationToken ct)
+    {
       var validationResult = validator.Validate(command);
 
-      if (!validationResult.IsValid) {
+      if (!validationResult.IsValid)
+      {
         return Result<DatabaseServerResult>.Invalid(validationResult.AsErrors());
       }
 
       var entity = await _getEntityForUpdateAsync(db, command.Id, ct);
 
-      if (entity is null) {
+      if (entity is null)
+      {
         return Result<DatabaseServerResult>.NotFound("Requested Resource Not Found");
       }
 
@@ -72,8 +77,10 @@ public static class UpdateDatabaseServer {
   }
 
 
-  public sealed class Validator : AbstractValidator<UpdateDatabaseServerCommand> {
-    public Validator(ServiceDbContext context) {
+  public sealed class Validator : AbstractValidator<UpdateDatabaseServerCommand>
+  {
+    public Validator(ServiceDbContext context)
+    {
       RuleFor(x => x.Port)
         .NotNull() //.WithMessage("Port Number is required!")
         .NotEmpty() //.WithMessage("Port Number is required!")

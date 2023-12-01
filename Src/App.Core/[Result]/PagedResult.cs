@@ -3,12 +3,9 @@
 namespace Yaver.App;
 
 /// <summary>
-///   Represents a paged result that contains the paged information and the result value.
+/// Represents a paged result that contains the total count and the value.
 /// </summary>
-/// <typeparam name="T">The type of the result value.</typeparam>
-public class PagedResult<T>(PagedInfo pagedInfo, T value) : Result<T>(value) {
-  /// <summary>
-  ///   Gets the information about the pagination of the result set.
-  /// </summary>
-  public PagedInfo PagedInfo { get; } = pagedInfo;
+/// <typeparam name="T">The type of the value.</typeparam>
+public class PagedResult<T>(int totalCount, List<T> items) : Result<List<T>>(items) {
+  public int TotalCount { get; } = totalCount;
 }

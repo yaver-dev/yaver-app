@@ -34,28 +34,27 @@ public static class ListDatabaseServers {
 
   public sealed class Mapper
     : YaverMapper<ListDatabaseServersRequest, DatabaseServerListModel, ListDatabaseServersCommand,
-      DatabaseServerListResult> {
+      PagedResult<DatabaseServerListItem>> {
     public override ListDatabaseServersCommand ToCommand(ListDatabaseServersRequest r) {
       return new ListDatabaseServersCommand(
-        r.Offset,
-        r.Limit,
-        r.Term,
-        r.Sort
+        Offset: r.Offset,
+        Limit: r.Limit,
+        Term: r.Term,
+        Sort: r.Sort
       );
     }
 
-    public override DatabaseServerListModel ToResponse(DatabaseServerListResult r) {
+    public override DatabaseServerListModel ToResponse(PagedResult<DatabaseServerListItem> r) {
       return new DatabaseServerListModel {
-        Items = r.Items.Select(item => new DatabaseServerListItemModel {
+        Items = r.Value.Select(item => new DatabaseServerListItemModel {
           Id = Guid.Parse(item.Id),
           Host = item.Host,
           Port = item.Port,
           Name = item.Name,
           ConnectionStringFormat = item.ConnectionStringFormat,
           IsDefault = item.IsDefault
-          // Status = item.Status // Add this line to fix the error
         }).ToList(),
-        TotalCount = (int)r.TotalCount
+        TotalCount = r.TotalCount
       };
     }
   }

@@ -7,11 +7,11 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 using Yaver.App;
-using Yaver.App.Result;
 
 namespace Admin.Service.Features.DatabaseServers;
 
-public static class CreateDatabase {
+public static class CreateDatabase
+{
   private static readonly Func<ServiceDbContext, Guid, CancellationToken, Task<DatabaseServerResult?>>
     _getEntityForResultAsync =
       EF.CompileAsyncQuery((ServiceDbContext context, Guid id, CancellationToken ct) =>
@@ -28,7 +28,8 @@ public static class CreateDatabase {
           ))
           .FirstOrDefault(c => c.Id == id));
 
-  private static DatabaseServer ToEntity(this CreateDatabaseServerCommand r) {
+  private static DatabaseServer ToEntity(this CreateDatabaseServerCommand r)
+  {
     return new DatabaseServer(
       host: r.Host,
       port: r.Port,
@@ -42,15 +43,18 @@ public static class CreateDatabase {
       ServiceDbContext db,
       IValidator<CreateDatabaseServerCommand> validator
     )
-    : RpcCommandHandler<CreateDatabaseServerCommand, Result<DatabaseServerResult>> {
+    : RpcCommandHandler<CreateDatabaseServerCommand, Result<DatabaseServerResult>>
+  {
     public override async Task<Result<DatabaseServerResult>> ExecuteAsync(
       CreateDatabaseServerCommand command,
       CancellationToken ct
-    ) {
+    )
+    {
       //validate command
       var validationResult = await validator.ValidateAsync(command, ct);
 
-      if (!validationResult.IsValid) {
+      if (!validationResult.IsValid)
+      {
         return Result<DatabaseServerResult>.Invalid(validationResult.AsErrors());
       }
 
@@ -63,8 +67,10 @@ public static class CreateDatabase {
     }
   }
 
-  public sealed class Validator : AbstractValidator<CreateDatabaseServerCommand> {
-    public Validator(ServiceDbContext context) {
+  public sealed class Validator : AbstractValidator<CreateDatabaseServerCommand>
+  {
+    public Validator(ServiceDbContext context)
+    {
       RuleFor(x => x.Port)
         .NotNull()
         .NotEmpty()
@@ -73,7 +79,8 @@ public static class CreateDatabase {
 
       RuleFor(x => x.Name)
         .NotEmpty().WithMessage("Name is required.")
-        .MustAsync(async (id, ct) => {
+        .MustAsync(async (id, ct) =>
+        {
           return !await context.DatabaseServers.AnyAsync(x => x.Name == id, ct);
         }).WithMessage("Name Must be unique");
     }

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 namespace Yaver.App;
 
 /// <summary>
-/// Authentication handler for authenticating the user's credentials based on the provided X-User-Info header.
+///   Authentication handler for authenticating the user's credentials based on the provided X-User-Info header.
 /// </summary>
 public class UserInfoAuthenticationHandler(
   IOptionsMonitor<AuthenticationSchemeOptions> options,
@@ -23,7 +23,7 @@ public class UserInfoAuthenticationHandler(
   internal const string RoleType = "roles";
 
   /// <summary>
-  /// Authenticates the user's credentials based on the provided X-User-Info header.
+  ///   Authenticates the user's credentials based on the provided X-User-Info header.
   /// </summary>
   /// <returns>A task that represents the asynchronous operation. The task result contains the authentication result.</returns>
   protected override Task<AuthenticateResult> HandleAuthenticateAsync() {
@@ -36,29 +36,30 @@ public class UserInfoAuthenticationHandler(
 
     string xUserInfo = Request.Headers[$"X-{SchemaName}"]!;
 
-    if (string.IsNullOrEmpty(xUserInfo))
+    if (string.IsNullOrEmpty(xUserInfo)) {
       return Task.FromResult(AuthenticateResult.Fail($"{SchemaName} header not found"));
+    }
 
 
     var payload = JwtPayload.Base64UrlDeserialize(xUserInfo) ?? throw new ArgumentException(null, "payload");
 
     ClaimsIdentity identity = new(
-      claims: payload.Claims,
-      authenticationType: SchemaName,
-      nameType: "name",
-      roleType: RoleType);
+      payload.Claims,
+      SchemaName,
+      "name",
+      RoleType);
 
     AuthenticationTicket ticket = new(
-      principal: new ClaimsPrincipal(identity),
-      properties: new AuthenticationProperties(),
-      authenticationScheme: SchemaName);
+      new ClaimsPrincipal(identity),
+      new AuthenticationProperties(),
+      SchemaName);
 
 
     var x = new RequestInfo(
-      UserId: Guid.Parse(payload.Sub),
-      AcceptLanguage: Request.Headers["accept-language"].FirstOrDefault() ?? "",
-      RequestId: Request.Headers["x-request-id"].FirstOrDefault() ?? "",
-      UserName: payload.FirstOrDefault(p => p.Key == "preferred_username").Value?.ToString() ?? "",
+      Guid.Parse(payload.Sub),
+      Request.Headers["accept-language"].FirstOrDefault() ?? "",
+      Request.Headers["x-request-id"].FirstOrDefault() ?? "",
+      payload.FirstOrDefault(p => p.Key == "preferred_username").Value?.ToString() ?? "",
       GivenName: payload.FirstOrDefault(p => p.Key == "given_name").Value?.ToString() ?? "",
       FamilyName: payload.FirstOrDefault(p => p.Key == "family_name").Value?.ToString() ?? "",
       Roles: ticket.Principal.Claims

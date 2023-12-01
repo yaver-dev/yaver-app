@@ -3,16 +3,17 @@ using Grpc.Core.Interceptors;
 
 using Microsoft.Extensions.Logging;
 
+// ReSharper disable once CheckNamespace
 namespace Yaver.App;
 
 /// <summary>
-/// Interceptor for logging gRPC server calls and any exceptions thrown by the handler.
+///   Interceptor for logging gRPC server calls and any exceptions thrown by the handler.
 /// </summary>
 public class ServerLogInterceptor(ILogger<ServerLogInterceptor> logger) : Interceptor {
   private readonly ILogger<ServerLogInterceptor> _logger = logger;
 
   /// <summary>
-  /// Intercepts unary server calls and logs the call details and any exceptions thrown by the handler.
+  ///   Intercepts unary server calls and logs the call details and any exceptions thrown by the handler.
   /// </summary>
   /// <typeparam name="TRequest">The type of the request message.</typeparam>
   /// <typeparam name="TResponse">The type of the response message.</typeparam>
@@ -40,7 +41,7 @@ public class ServerLogInterceptor(ILogger<ServerLogInterceptor> logger) : Interc
   }
 
   /// <summary>
-  /// Overrides the base method to intercept client streaming server calls and log the request and response.
+  ///   Overrides the base method to intercept client streaming server calls and log the request and response.
   /// </summary>
   /// <typeparam name="TRequest">The type of the request message.</typeparam>
   /// <typeparam name="TResponse">The type of the response message.</typeparam>
@@ -58,7 +59,7 @@ public class ServerLogInterceptor(ILogger<ServerLogInterceptor> logger) : Interc
   }
 
   /// <summary>
-  /// Overrides the default server streaming server handler to log the server call and then call the base implementation.
+  ///   Overrides the default server streaming server handler to log the server call and then call the base implementation.
   /// </summary>
   public override Task ServerStreamingServerHandler<TRequest, TResponse>(
     TRequest request,
@@ -71,7 +72,7 @@ public class ServerLogInterceptor(ILogger<ServerLogInterceptor> logger) : Interc
   }
 
   /// <summary>
-  /// Overrides the base method to log the call and then invoke the base method.
+  ///   Overrides the base method to log the call and then invoke the base method.
   /// </summary>
   /// <typeparam name="TRequest">The type of the request message.</typeparam>
   /// <typeparam name="TResponse">The type of the response message.</typeparam>

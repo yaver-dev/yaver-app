@@ -1,14 +1,14 @@
 using Microsoft.Extensions.Hosting;
 
+// ReSharper disable once CheckNamespace
 namespace Yaver.App;
 
-
 /// <summary>
-/// Provides extension methods for mapping RPC handlers to a host.
+///   Provides extension methods for mapping RPC handlers to a host.
 /// </summary>
 public static class MapRpcHandlersExtensions {
   /// <summary>
-  /// Maps RPC handlers to the specified host and service URL.
+  ///   Maps RPC handlers to the specified host and service URL.
   /// </summary>
   /// <param name="host">The host to map the RPC handlers to.</param>
   /// <param name="serviceName">The name of the service assembly.</param>
@@ -24,12 +24,12 @@ public static class MapRpcHandlersExtensions {
     ArgumentNullException.ThrowIfNull(serviceName);
 
     var commands = AppDomain.CurrentDomain
-      .GetAssemblies().First(predicate: x => x.GetName().Name == serviceName)
+      .GetAssemblies().First(x => x.GetName().Name == serviceName)
       .GetTypes()
       .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRpcCommand<>)))
       .Where(t => !t.IsInterface && !t.IsAbstract);
 
-    host.MapRemote(remoteAddress: serviceUrl, r: rc => {
+    host.MapRemote(serviceUrl, rc => {
       var registerMethod = rc
         .GetType()
         .GetMethods()

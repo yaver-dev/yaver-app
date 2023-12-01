@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using System.Net;
 
-using System.Net;
+using Grpc.Core;
 
 using Microsoft.AspNetCore.Builder;
-using Grpc.Core;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.Extensions.Logging;
 
 namespace Yaver.App;
 
@@ -14,26 +13,33 @@ internal class ExceptionHandler {
 }
 
 /// <summary>
-/// Represents an HTTP API response.
+///   Represents an HTTP API response.
 /// </summary>
 public record ApiResponse(int StatusCode, string Message, object? Errors = null);
 
 /// <summary>
-/// extensions for global exception handling
+///   extensions for global exception handling
 /// </summary>
 public static class ExceptionHandlerExtensions {
   /// <summary>
-  /// Adds a custom exception handler middleware to the pipeline that logs exceptions and returns a JSON response with error details.
+  ///   Adds a custom exception handler middleware to the pipeline that logs exceptions and returns a JSON response with
+  ///   error details.
   /// </summary>
-  /// <param name="app">The <see cref="IApplicationBuilder"/> instance.</param>
-  /// <param name="logger">The optional <see cref="ILogger"/> instance to use for logging exceptions. If not provided, a logger of type <see cref="ExceptionHandler"/> will be resolved from the application context.</param>
-  /// <param name="logStructuredException">A boolean value indicating whether to log the exception in a structured format. If true, the exception will be logged using the <see cref="ILogger.LogError{TState}(EventId, Exception, TState)"/> method. If false, the exception will be logged as a formatted string.</param>
-  /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+  /// <param name="app">The <see cref="IApplicationBuilder" /> instance.</param>
+  /// <param name="logger">
+  ///   The optional <see cref="ILogger" /> instance to use for logging exceptions. If not provided, a
+  ///   logger of type <see cref="ExceptionHandler" /> will be resolved from the application context.
+  /// </param>
+  /// <param name="logStructuredException">
+  ///   A boolean value indicating whether to log the exception in a structured format. If
+  ///   true, the exception will be logged using the <see cref="ILogger.LogError{TState}(EventId, Exception, TState)" />
+  ///   method. If false, the exception will be logged as a formatted string.
+  /// </param>
+  /// <returns>The <see cref="IApplicationBuilder" /> instance.</returns>
   public static IApplicationBuilder UseYaverExceptionHandler(
     this IApplicationBuilder app,
     ILogger? logger = null,
     bool logStructuredException = false) {
-
     app.UseExceptionHandler(errApp => {
       errApp.Run(async ctx => {
         var exHandlerFeature = ctx.Features.Get<IExceptionHandlerFeature>();
@@ -52,10 +58,11 @@ public static class ExceptionHandlerExtensions {
             ---------------------------------
             {exHandlerFeature.Error.StackTrace}";
 
-          if (logStructuredException)
+          if (logStructuredException) {
             logger.LogError("{@http}{@type}{@reason}{@exception}", http, type, error, exHandlerFeature.Error);
-          else
+          } else {
             logger.LogError(msg);
+          }
 
           if (exHandlerFeature.Error.GetType().Name == nameof(RpcException)) {
             var rex = (RpcException)err;

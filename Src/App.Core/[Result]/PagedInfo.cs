@@ -1,31 +1,33 @@
-﻿namespace Yaver.App.Result;
+﻿// ReSharper disable once CheckNamespace
+
+namespace Yaver.App;
 
 /// <summary>
-/// Represents the pagination information for a paged result set.
+///   Represents the pagination information for a paged result set.
 /// </summary>
 public class PagedInfo(long pageNumber, long pageSize, long totalPages, long totalRecords) {
   /// <summary>
-  /// Gets or sets the current page number.
+  ///   Gets or sets the current page number.
   /// </summary>
   public long PageNumber { get; private set; } = pageNumber;
 
   /// <summary>
-  /// Gets or sets the number of items per page.
+  ///   Gets or sets the number of items per page.
   /// </summary>
   public long PageSize { get; private set; } = pageSize;
 
   /// <summary>
-  /// Gets or sets the total number of pages.
+  ///   Gets or sets the total number of pages.
   /// </summary>
   public long TotalPages { get; private set; } = totalPages;
 
   /// <summary>
-  /// Gets or sets the total number of items.
+  ///   Gets or sets the total number of items.
   /// </summary>
   public long TotalRecords { get; private set; } = totalRecords;
 
   /// <summary>
-  /// Sets the current page number.
+  ///   Sets the current page number.
   /// </summary>
   /// <param name="pageNumber">The page number to set.</param>
   /// <returns>The updated PagedInfo instance.</returns>
@@ -36,7 +38,7 @@ public class PagedInfo(long pageNumber, long pageSize, long totalPages, long tot
   }
 
   /// <summary>
-  /// Sets the number of items per page.
+  ///   Sets the number of items per page.
   /// </summary>
   /// <param name="pageSize">The page size to set.</param>
   /// <returns>The updated PagedInfo instance.</returns>
@@ -47,7 +49,7 @@ public class PagedInfo(long pageNumber, long pageSize, long totalPages, long tot
   }
 
   /// <summary>
-  /// Sets the total number of pages.
+  ///   Sets the total number of pages.
   /// </summary>
   /// <param name="totalPages">The total number of pages to set.</param>
   /// <returns>The updated PagedInfo instance.</returns>
@@ -58,7 +60,7 @@ public class PagedInfo(long pageNumber, long pageSize, long totalPages, long tot
   }
 
   /// <summary>
-  /// Sets the total number of items.
+  ///   Sets the total number of items.
   /// </summary>
   /// <param name="totalRecords">The total number of items to set.</param>
   /// <returns>The updated PagedInfo instance.</returns>

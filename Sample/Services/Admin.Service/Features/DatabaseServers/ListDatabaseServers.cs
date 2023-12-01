@@ -27,15 +27,15 @@ public static class ListDatabaseServers {
 
       return new PagedResult<DatabaseServerListItem>(
          totalCount: count,
-           items: await data.Select(x => new DatabaseServerListItem(
-            x.Id.ToString(),
-            x.Host,
-            x.Port,
-            x.Name,
-            x.ConnectionStringFormat,
-            x.IsDefault,
-            x.Status))
-          .ToListAsync(ct)
+        value: await data.Select(x => new DatabaseServerListItem(
+          x.Id.ToString(),
+          x.Host,
+          x.Port,
+          x.Name,
+          x.ConnectionStringFormat,
+          x.IsDefault,
+          x.Status))
+        .ToListAsync(ct)
       );
     }
   }

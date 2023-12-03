@@ -10,16 +10,16 @@
 
   <!-- FastEndpoints -->
   <ItemGroup>
-    <PackageReference Include="FastEndpoints.Messaging.Core" Version="5.*"/>
+    <PackageReference Include="FastEndpoints.Messaging.Core" Version="5.20.1" />
   </ItemGroup>
 
   <!-- Global Usings -->
   <ItemGroup>
-    <Using Include="System"/>
-    <Using Include="FastEndpoints"/>
+    <Using Include="System" />
+    <Using Include="FastEndpoints" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../Src/App.Core/App.Core.csproj"/>
+    <ProjectReference Include="../../../Src/App.Core/App.Core.csproj" />
   </ItemGroup>
 </Project>

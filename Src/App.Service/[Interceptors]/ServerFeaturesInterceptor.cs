@@ -3,14 +3,15 @@
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 
+// ReSharper disable once CheckNamespace
 namespace Yaver.App;
 
 /// <summary>
-/// Interceptor for setting server features before continuing with the request.
+///   Interceptor for setting server features before continuing with the request.
 /// </summary>
 public class ServerFeaturesInterceptor : Interceptor {
   /// <summary>
-  /// Overrides the default server streaming server handler to set server features before continuing with the request.
+  ///   Overrides the default server streaming server handler to set server features before continuing with the request.
   /// </summary>
   /// <typeparam name="TRequest">The type of the request message.</typeparam>
   /// <typeparam name="TResponse">The type of the response message.</typeparam>
@@ -31,7 +32,7 @@ public class ServerFeaturesInterceptor : Interceptor {
   }
 
   /// <summary>
-  /// Intercepts unary server calls and sets the http context features before continuing the pipeline execution.
+  ///   Intercepts unary server calls and sets the http context features before continuing the pipeline execution.
   /// </summary>
   public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
     TRequest request,

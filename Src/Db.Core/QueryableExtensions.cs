@@ -7,35 +7,34 @@ using Microsoft.EntityFrameworkCore;
 namespace Yaver.Db;
 
 /// <summary>
-/// Provides extension methods for <see cref="IQueryable{T}"/> to enable pagination and dynamic sorting.
+///   Provides extension methods for <see cref="IQueryable{T}" /> to enable pagination and dynamic sorting.
 /// </summary>
 public static class QueryableExtensions {
   private static readonly MethodInfo _orderByMethod =
-      typeof(Queryable).GetMethods().Single(method =>
-          method.Name == "OrderBy" && method.GetParameters().Length == 2);
+    typeof(Queryable).GetMethods().Single(method =>
+      method.Name == "OrderBy" && method.GetParameters().Length == 2);
 
   private static readonly MethodInfo _orderByDescendingMethod =
-      typeof(Queryable).GetMethods().Single(method =>
-          method.Name == "OrderByDescending" && method.GetParameters().Length == 2);
+    typeof(Queryable).GetMethods().Single(method =>
+      method.Name == "OrderByDescending" && method.GetParameters().Length == 2);
 
   private static readonly MethodInfo _thenByMethod =
-      typeof(Queryable).GetMethods().Single(method =>
-          method.Name == "ThenBy" && method.GetParameters().Length == 2);
+    typeof(Queryable).GetMethods().Single(method =>
+      method.Name == "ThenBy" && method.GetParameters().Length == 2);
 
   private static readonly MethodInfo _thenByDescendingMethod =
-      typeof(Queryable).GetMethods().Single(method =>
-          method.Name == "ThenByDescending" && method.GetParameters().Length == 2);
+    typeof(Queryable).GetMethods().Single(method =>
+      method.Name == "ThenByDescending" && method.GetParameters().Length == 2);
 
 
   public static async Task<Tuple<int, IQueryable<T>>> PaginateAsync<T>(
-      this IQueryable<T> source,
-      string? searchTerm = null,
-      string? sort = null,
-      int? offset = null,
-      int? limit = null,
-      string[]? searchFields = null
+    this IQueryable<T> source,
+    string? searchTerm = null,
+    string? sort = null,
+    int? offset = null,
+    int? limit = null,
+    string[]? searchFields = null
   ) where T : class {
-
     #region filter
 
     Expression<Func<T, bool>>? filter = null;
@@ -49,8 +48,9 @@ public static class QueryableExtensions {
 
     return await source.PaginateAsync(filter, sort, offset, limit);
   }
+
   /// <summary>
-  /// Paginates the given queryable source with optional filter, sort, offset and limit parameters.
+  ///   Paginates the given queryable source with optional filter, sort, offset and limit parameters.
   /// </summary>
   /// <typeparam name="T">The type of the elements of source.</typeparam>
   /// <param name="source">The source to paginate.</param>
@@ -65,19 +65,20 @@ public static class QueryableExtensions {
     string? sort = null,
     int? offset = null,
     int? limit = null
-) where T : class {
+  ) where T : class {
     var itemIndex = offset ?? 0;
     var pageSize = limit ?? 25;
 
-    if (filter != null)
+    if (filter != null) {
       source = source.Where(filter);
+    }
 
     var count = await source.CountAsync();
 
     if (!string.IsNullOrEmpty(sort)) {
       source = sort.StartsWith("-")
-          ? source.OrderByPropertyDescending(sort[1..])
-          : source.OrderByProperty(sort);
+        ? source.OrderByPropertyDescending(sort[1..])
+        : source.OrderByProperty(sort);
     }
 
     source = source.Skip(itemIndex);
@@ -93,7 +94,7 @@ public static class QueryableExtensions {
   }
 
   /// <summary>
-  /// Determines whether the specified property exists in the given IQueryable source.
+  ///   Determines whether the specified property exists in the given IQueryable source.
   /// </summary>
   /// <typeparam name="T">The type of the IQueryable source.</typeparam>
   /// <param name="source">The IQueryable source to check for the property.</param>
@@ -101,36 +102,38 @@ public static class QueryableExtensions {
   /// <returns>true if the property exists in the IQueryable source; otherwise, false.</returns>
   public static bool PropertyExists<T>(this IQueryable<T> source, string propertyName) {
     return typeof(T).GetProperty(propertyName,
-        BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) != null;
+      BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) != null;
   }
 
   private static IQueryable<T> OrderByProperty<T>(this IQueryable<T> source, string propertyName, bool then = false) {
     var parameterExpression = Expression.Parameter(typeof(T));
     var orderByProperty = LinqHelper.BuildExpressionFromPropertyChain(typeof(T), parameterExpression, propertyName);
-    if (orderByProperty == null)
+    if (orderByProperty == null) {
       throw new ArgumentException($"Property '{propertyName}' is not a member of {typeof(T)}");
+    }
 
     var lambda = Expression.Lambda(orderByProperty, parameterExpression);
     var genericMethod =
-        then
-            ? _thenByMethod.MakeGenericMethod(typeof(T), orderByProperty.Type)
-            : _orderByMethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
+      then
+        ? _thenByMethod.MakeGenericMethod(typeof(T), orderByProperty.Type)
+        : _orderByMethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
     var ret = genericMethod.Invoke(null, new object[] { source, lambda });
     return (IQueryable<T>)ret;
   }
 
   private static IQueryable<T> OrderByPropertyDescending<T>(this IQueryable<T> source, string propertyName,
-      bool then = false) {
+    bool then = false) {
     var parameterExpression = Expression.Parameter(typeof(T));
     var orderByProperty = LinqHelper.BuildExpressionFromPropertyChain(typeof(T), parameterExpression, propertyName);
-    if (orderByProperty == null)
+    if (orderByProperty == null) {
       throw new ArgumentException($"Property '{propertyName}' is not a member of {typeof(T)}");
+    }
 
     var lambda = Expression.Lambda(orderByProperty, parameterExpression);
     var genericMethod =
-        then
-            ? _thenByDescendingMethod.MakeGenericMethod(typeof(T), orderByProperty.Type)
-            : _orderByDescendingMethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
+      then
+        ? _thenByDescendingMethod.MakeGenericMethod(typeof(T), orderByProperty.Type)
+        : _orderByDescendingMethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
     var ret = genericMethod.Invoke(null, new object[] { source, lambda });
     return (IQueryable<T>)ret;
   }

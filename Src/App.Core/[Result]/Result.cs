@@ -1,19 +1,20 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Yaver.App.Result;
+// ReSharper disable once CheckNamespace
+namespace Yaver.App;
 
 /// <summary>
-/// Represents the result of an operation that can either succeed or fail.
+///   Represents the result of an operation that can either succeed or fail.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
 public class Result<T> : IResult {
   /// <summary>
-  /// Represents the result of an operation that may or may not have succeeded.
+  ///   Represents the result of an operation that may or may not have succeeded.
   /// </summary>
   protected Result() { }
 
   /// <summary>
-  /// Initializes a new instance of the <see cref="Result{T}"/> class with the specified value.
+  ///   Initializes a new instance of the <see cref="Result{T}" /> class with the specified value.
   /// </summary>
   /// <param name="value">The value to be stored in the result.</param>
   public Result(T value) {
@@ -21,7 +22,7 @@ public class Result<T> : IResult {
   }
 
   /// <summary>
-  /// Represents the result of an operation that can either succeed or fail.
+  ///   Represents the result of an operation that can either succeed or fail.
   /// </summary>
   /// <typeparam name="T">The type of the result value.</typeparam>
   protected internal Result(T value, string successMessage) : this(value) {
@@ -29,55 +30,56 @@ public class Result<T> : IResult {
   }
 
   /// <summary>
-  /// Gets the status of the result.
+  ///   Gets the status of the result.
   /// </summary>
   protected Result(ResultStatus status) {
     Status = status;
   }
 
   /// <summary>
-  /// Gets the value of the result.
+  ///   Gets the value of the result.
   /// </summary>
   public T Value { get; }
 
   /// <summary>
-  /// Gets a value indicating whether the result is successful.
+  ///   Gets a value indicating whether the result is successful.
   /// </summary>
   public bool IsSuccess => Status == ResultStatus.Ok;
 
   /// <summary>
-  /// Gets a value indicating whether this <see cref="Result"/> is a failure.
+  ///   Gets a value indicating whether this <see cref="Result" /> is a failure.
   /// </summary>
   public bool IsFailure => !IsSuccess;
 
   /// <summary>
-  /// Gets or sets the success message associated with the result.
+  ///   Gets or sets the success message associated with the result.
   /// </summary>
   public string SuccessMessage { get; set; } = string.Empty;
 
   /// <summary>
-  /// Gets or sets the correlation ID associated with the result.
+  ///   Gets or sets the correlation ID associated with the result.
   /// </summary>
   public string CorrelationId { get; set; } = string.Empty;
 
   /// <summary>
-  /// Gets the type of the value contained in the result.
+  ///   Gets the type of the value contained in the result.
   /// </summary>
-  [JsonIgnore] public Type ValueType => typeof(T);
+  [JsonIgnore]
+  public Type ValueType => typeof(T);
 
 
   /// <summary>
-  /// Gets or sets the status of the result.
+  ///   Gets or sets the status of the result.
   /// </summary>
   public ResultStatus Status { get; set; } = ResultStatus.Ok;
 
   /// <summary>
-  /// Gets or sets the collection of errors associated with the result.
+  ///   Gets or sets the collection of errors associated with the result.
   /// </summary>
   public IEnumerable<string> Errors { get; set; } = new List<string>();
 
   /// <summary>
-  /// Gets or sets the list of validation errors.
+  ///   Gets or sets the list of validation errors.
   /// </summary>
   public List<ValidationError> ValidationErrors { get; set; } = new();
 
@@ -97,30 +99,32 @@ public class Result<T> : IResult {
     return new Result<T>(value);
   }
 
-  public static implicit operator Result<T>(Result result) => new(default(T)) {
-    Status = result.Status,
-    Errors = result.Errors,
-    SuccessMessage = result.SuccessMessage,
-    CorrelationId = result.CorrelationId,
-    ValidationErrors = result.ValidationErrors
-  };
-
-  /// <summary>
-  ///   Converts PagedInfo into a PagedResult<typeparamref name="T" />
-  /// </summary>
-  /// <param name="pagedInfo"></param>
-  /// <returns></returns>
-  public PagedResult<T> ToPagedResult(PagedInfo pagedInfo) {
-    var pagedResult = new PagedResult<T>(pagedInfo, Value) {
-      Status = Status,
-      SuccessMessage = SuccessMessage,
-      CorrelationId = CorrelationId,
-      Errors = Errors,
-      ValidationErrors = ValidationErrors
+  public static implicit operator Result<T>(Result result) {
+    return new Result<T>(default(T)) {
+      Status = result.Status,
+      Errors = result.Errors,
+      SuccessMessage = result.SuccessMessage,
+      CorrelationId = result.CorrelationId,
+      ValidationErrors = result.ValidationErrors
     };
-
-    return pagedResult;
   }
+
+  // /// <summary>
+  // ///   Converts PagedInfo into a PagedResult<typeparamref name="T" />
+  // /// </summary>
+  // /// <param name="pagedInfo"></param>
+  // /// <returns></returns>
+  // public PagedResult<List<T>> ToPagedResult(int totalCount) {
+  //   var pagedResult = new PagedResult<List<T>>(totalCount, Value) {
+  //     Status = Status,
+  //     SuccessMessage = SuccessMessage,
+  //     CorrelationId = CorrelationId,
+  //     Errors = Errors,
+  //     ValidationErrors = ValidationErrors
+  //   };
+
+  //   return pagedResult;
+  // }
 
   /// <summary>
   ///   Represents a successful operation and accepts a values as the result of the operation

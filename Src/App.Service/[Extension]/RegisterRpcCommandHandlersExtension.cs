@@ -1,25 +1,26 @@
 using Microsoft.AspNetCore.Builder;
 
+// ReSharper disable once CheckNamespace
 namespace Yaver.App;
 
 /// <summary>
-/// Provides extension methods for registering RPC command handlers in a minimal API web application.
+///   Provides extension methods for registering RPC command handlers in a minimal API web application.
 /// </summary>
 public static class RegisterRpcCommandHandlersExtension {
   /// <summary>
-  /// Represents a minimal API web application.
+  ///   Represents a minimal API web application.
   /// </summary>
   public static WebApplication RegisterRpcCommandHandlers(
     this WebApplication app) {
-
     var hndlrs = AppDomain.CurrentDomain
       .GetAssemblies()
       .SelectMany(s => s.GetTypes())
-      .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRpcCommandHandler<,>)))
+      .Where(t => t.GetInterfaces()
+      .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRpcCommandHandler<,>)))
       .Where(t => !t.IsInterface && !t.IsAbstract);
 
 
-    app.MapHandlers(h: ho => {
+    app.MapHandlers(ho => {
       var registerMethod = ho
         .GetType()
         .GetMethods()
@@ -34,8 +35,9 @@ public static class RegisterRpcCommandHandlersExtension {
         registerMethod
           .MakeGenericMethod([args[0], handler, args[1]])
           .Invoke(ho, []);
+      }
 
-      };
+      ;
     });
 
     return app;

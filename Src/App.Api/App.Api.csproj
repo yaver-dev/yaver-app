@@ -6,20 +6,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../App.Core/App.Core.csproj" />
+    <ProjectReference Include="../App.Core/App.Core.csproj"/>
   </ItemGroup>
 
   <!-- Authentication -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3"/>
   </ItemGroup>
 
   <!-- Global Usings -->
   <ItemGroup>
-    <Using Include="FastEndpoints" />
-    <Using Include="System" />
-    <Using Include="System.Threading" />
-    <Using Include="System.Threading.Tasks" />
+    <Using Include="FastEndpoints"/>
+    <Using Include="System"/>
+    <Using Include="System.Threading"/>
+    <Using Include="System.Threading.Tasks"/>
   </ItemGroup>
 </Project>

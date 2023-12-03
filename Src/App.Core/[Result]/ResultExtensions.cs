@@ -1,7 +1,9 @@
-﻿namespace Yaver.App.Result;
+﻿// ReSharper disable once CheckNamespace
+
+namespace Yaver.App;
 
 /// <summary>
-///   Provides extension methods for the <see cref="Result{T}"/> class.
+///   Provides extension methods for the <see cref="Result{T}" /> class.
 /// </summary>
 public static class ResultExtensions {
   /// <summary>
@@ -17,20 +19,20 @@ public static class ResultExtensions {
   public static Result<TDestination> Map<TSource, TDestination>(this Result<TSource> result,
     Func<TSource, TDestination> func) {
     return result.Status switch {
-      ResultStatus.Ok => (Result<TDestination>)func(result),
+      ResultStatus.Ok => func(result),
       ResultStatus.NotFound => result.Errors.Any()
-                ? Result<TDestination>.NotFound(result.Errors.ToArray())
-                : Result<TDestination>.NotFound(),
+        ? Result<TDestination>.NotFound(result.Errors.ToArray())
+        : Result<TDestination>.NotFound(),
       ResultStatus.Unauthorized => Result<TDestination>.Unauthorized(),
       ResultStatus.Forbidden => Result<TDestination>.Forbidden(),
       ResultStatus.Invalid => Result<TDestination>.Invalid(result.ValidationErrors),
       ResultStatus.Error => Result<TDestination>.Error(result.Errors.ToArray()),
       ResultStatus.Conflict => result.Errors.Any()
-                ? Result<TDestination>.Conflict(result.Errors.ToArray())
-                : Result<TDestination>.Conflict(),
+        ? Result<TDestination>.Conflict(result.Errors.ToArray())
+        : Result<TDestination>.Conflict(),
       ResultStatus.CriticalError => Result<TDestination>.CriticalError(result.Errors.ToArray()),
       ResultStatus.Unavailable => Result<TDestination>.Unavailable(result.Errors.ToArray()),
-      _ => throw new NotSupportedException($"Result {result.Status} conversion is not supported."),
+      _ => throw new NotSupportedException($"Result {result.Status} conversion is not supported.")
     };
   }
 }

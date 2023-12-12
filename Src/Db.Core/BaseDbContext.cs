@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
+using Yaver.App;
+
 // ReSharper disable once CheckNamespace
 namespace Yaver.Db;
 
@@ -9,7 +11,7 @@ namespace Yaver.Db;
 /// <remarks>
 ///   This class should be inherited by specific database contexts and configured accordingly.
 /// </remarks>
-public class BaseDbContext(Guid currentUserId) : DbContext {
+public class BaseDbContext(Guid currentUserId) : DbContext { 
   /// <summary>
   ///   Configures the context with options such as the connection string, database provider, and other settings.
   /// </summary>

@@ -11,13 +11,14 @@ public static class RegisterRpcCommandHandlersExtension {
   ///   Represents a minimal API web application.
   /// </summary>
   public static WebApplication RegisterRpcCommandHandlers(
-    this WebApplication app) {
-    var hndlrs = AppDomain.CurrentDomain
+    this WebApplication app
+  ) {
+    var handlers = AppDomain.CurrentDomain
       .GetAssemblies()
       .SelectMany(s => s.GetTypes())
       .Where(t => t.GetInterfaces()
-      .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRpcCommandHandler<,>)))
-      .Where(t => !t.IsInterface && !t.IsAbstract);
+        .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRpcCommandHandler<,>)))
+      .Where(t => t is { IsInterface: false, IsAbstract: false });
 
 
     app.MapHandlers(ho => {
@@ -27,7 +28,7 @@ public static class RegisterRpcCommandHandlersExtension {
         //TODO: fix this
         .Last(m => m.Name == "Register");
 
-      foreach (var handler in hndlrs) {
+      foreach (var handler in handlers) {
         var args = handler
           .GetInterface("IRpcCommandHandler`2")?
           .GetGenericArguments()!;

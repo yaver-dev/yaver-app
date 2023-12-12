@@ -54,7 +54,7 @@ var context = new ServiceDbContext(app.Configuration,
       GivenName: "",
       FamilyName: "",
       Roles: [],
-      TenantIdentifier: ""
+      Tenant: ""
     )
   )
 );

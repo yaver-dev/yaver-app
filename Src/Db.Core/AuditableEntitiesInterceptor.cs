@@ -1,5 +1,9 @@
+using System.Security.Claims;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace Yaver.Db;
@@ -9,10 +13,12 @@ namespace Yaver.Db;
 ///   ID.
 /// </summary>
 /// <param name="currentUserId">The ID of the current user.</param>
-public class AuditableEntitiesInterceptor(Guid currentUserId) : SaveChangesInterceptor {
+public class AuditableEntitiesInterceptor(Guid currentUserId
+  // IHttpContextAccessor contextAccessor,
+  // ILogger<AuditableEntitiesInterceptor> logger
+) : SaveChangesInterceptor {
   // private readonly IHttpContextAccessor _httpContextAccessor;
-  private readonly Guid _currentUserId = currentUserId;
-
+  // private readonly Guid _currentUserId = currentUserId;
 
   /// <summary>
   ///   Overrides the SavingChanges method of the <see cref="Microsoft.EntityFrameworkCore.Diagnostics.Interceptor" /> class
@@ -32,8 +38,8 @@ public class AuditableEntitiesInterceptor(Guid currentUserId) : SaveChangesInter
   /// </returns>
   public override InterceptionResult<int> SavingChanges(
     DbContextEventData eventData,
-    InterceptionResult<int> result) {
-
+    InterceptionResult<int> result
+  ) {
     ArgumentNullException.ThrowIfNull(eventData);
 
     BeforeSaveTriggers(eventData.Context);
@@ -51,8 +57,8 @@ public class AuditableEntitiesInterceptor(Guid currentUserId) : SaveChangesInter
   public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
     DbContextEventData eventData,
     InterceptionResult<int> result,
-    CancellationToken cancellationToken = default) {
-
+    CancellationToken cancellationToken = default
+  ) {
     ArgumentNullException.ThrowIfNull(eventData);
 
     BeforeSaveTriggers(eventData.Context);
@@ -62,22 +68,30 @@ public class AuditableEntitiesInterceptor(Guid currentUserId) : SaveChangesInter
   private void BeforeSaveTriggers(DbContext? context) {
     var entries = context?.ChangeTracker
       .Entries()
-      .Where(e => e.Entity is AuditableEntity && (
-        e.State == EntityState.Added
-        || e.State == EntityState.Modified));
+      .Where(e => e is { Entity: AuditableEntity, State: EntityState.Added or EntityState.Modified });
 
-    if (entries != null) {
-      foreach (var entityEntry in entries) {
-        if (entityEntry.Entity is AuditableEntity auditableEntity) {
-          auditableEntity.UpdatedAt = DateTime.UtcNow;
-          auditableEntity.UpdatedBy = _currentUserId;
+    // var principal = contextAccessor.HttpContext.User;
+    //
+    // var currentUserId = Guid.Empty;
+    //
+    // if (!principal.Identity!.IsAuthenticated) {
+    //   logger.LogCritical("Claims principal is not authenticated and could not generate audit logs");
+    // } else {
+    //   currentUserId = Guid.Parse(principal.FindFirst("sub")!.Value);
+    // }
 
-          if (entityEntry.State == EntityState.Added) {
-            auditableEntity.CreatedAt = DateTime.UtcNow;
-            auditableEntity.CreatedBy = _currentUserId;
-          }
-        }
-      }
+    if (entries == null) return;
+
+    foreach (var entityEntry in entries) {
+      if (entityEntry.Entity is not AuditableEntity auditableEntity) continue;
+
+      auditableEntity.UpdatedAt = DateTime.UtcNow;
+      auditableEntity.UpdatedBy = currentUserId;
+
+      if (entityEntry.State != EntityState.Added) continue;
+
+      auditableEntity.CreatedAt = DateTime.UtcNow;
+      auditableEntity.CreatedBy = currentUserId;
     }
   }
 }

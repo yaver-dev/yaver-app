@@ -40,11 +40,9 @@ app
   .UseYaverExceptionHandler(logStructuredException: true)
   .UseAuthentication()
   .UseAuthorization()
-  .UseFastEndpoints(c =>
-  {
+  .UseFastEndpoints(c => {
     c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
-    c.Endpoints.Configurator = ep =>
-    {
+    c.Endpoints.Configurator = ep => {
       //TODO remove before stable release
       ep.PreProcessors(Order.Before, new MyRequestLogger());
       // ep.PreProcessors(Order.Before, new YaverHttpProcessor());
@@ -54,21 +52,14 @@ app
 
 app.MapRpcHandlers(
   "Admin.ServiceBase",
-  app.Configuration.GetSection("Services").GetValue<string>("ADMIN"));
-
-
-
+  app.Configuration.GetSection("Services").GetValue<string>("ADMIN")
+);
 
 app.Run();
 
-
-
-namespace Api
-{
-  public class MyRequestLogger : IGlobalPreProcessor
-  {
-    public async Task PreProcessAsync(IPreProcessorContext ctx, CancellationToken ct)
-    {
+namespace Api {
+  public class MyRequestLogger : IGlobalPreProcessor {
+    public async Task PreProcessAsync(IPreProcessorContext ctx, CancellationToken ct) {
       await Task.CompletedTask;
       // var logger = ctx.RequestServices.GetRequiredService<ILogger>();
       // logger.LogInformation($"request:{req?.GetType().FullName} path: {ctx.Request.Path}");
@@ -85,7 +76,7 @@ namespace Api
       Console.WriteLine($"{userInfo}");
       Console.WriteLine("------------------");
       Console.WriteLine(
-        $"roles: {JsonSerializer.Serialize(ctx.HttpContext.User?.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToList())}");
+        $"roles: {JsonSerializer.Serialize(ctx.HttpContext.User?.Claims.Where(c => c.Type == "roles").Select(c => c.Value).ToList())}");
       Console.WriteLine("------------------");
       Console.WriteLine($"request:{ctx.HttpContext.Request?.GetType().FullName} path: {ctx.HttpContext.Request.Path}");
       Console.WriteLine("------------------");

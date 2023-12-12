@@ -37,6 +37,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Db", "Db", "{67EC6D6D-953D-
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{D490935D-84AB-4630-9CB4-8C16ECA016FE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Devops", "Devops", "{0C8F779A-019A-496E-9E1F-50AB66B39ACC}"
+	ProjectSection(SolutionItems) = preProject
+		..\Src\changelog.md = ..\Src\changelog.md
+		..\Src\Directory.Build.props = ..\Src\Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,1 +1,21 @@
-Hi :)
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.41.0] - 2023-12-13
+
+### Fixed
+
+- map rpc handlers method was not working properly on bff apis, new implementation added
+
+### Changed
+
+- request info modified tenant added
+- userInfoAuthenticationHandler implementation changed, tenant information fetched from claim instead of header
+
+### Removed
+
+- request info modified tenantIdentifier no longer exists

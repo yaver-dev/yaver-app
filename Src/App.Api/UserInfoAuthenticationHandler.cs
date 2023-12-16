@@ -47,7 +47,8 @@ public class UserInfoAuthenticationHandler(
       payload.Claims,
       SchemaName,
       "name",
-      RoleType);
+      RoleType
+    );
 
     AuthenticationTicket ticket = new(
       new ClaimsPrincipal(identity),
@@ -66,15 +67,15 @@ public class UserInfoAuthenticationHandler(
         .Where(c => c.Type == RoleType)
         .Select(c => c.Value).ToList(),
       Email: payload.FirstOrDefault(p => p.Key == "email").Value?.ToString() ?? "",
-      TenantIdentifier: Request.Headers["x-tenant-id"].FirstOrDefault() ?? ""
+      Tenant: payload.FirstOrDefault(p => p.Key == "tenant").Value.ToString() ?? ""
     );
 
-    Context.Features.Set(x);
+    Context.Features.Set(requestInfo);
 
-    var roles = ticket.Principal.Claims
-      .Where(c => c.Type == RoleType)
-      .Select(c => c.Value)
-      .ToList();
+    // var roles = ticket.Principal.Claims
+    //   .Where(c => c.Type == RoleType)
+    //   .Select(c => c.Value)
+    //   .ToList();
 
     return Task.FromResult(AuthenticateResult.Success(ticket));
   }

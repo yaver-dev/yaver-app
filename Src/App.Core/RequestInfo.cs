@@ -16,7 +16,8 @@ public record RequestInfo(
   string GivenName,
   string FamilyName,
   List<string> Roles,
-  string TenantIdentifier);
+  string Tenant
+);
 
 // Provides access to the request information.
 /// <summary>
@@ -78,4 +79,22 @@ public class YaverContext : IYaverContext {
   ///   Gets the information about the incoming HTTP request.
   /// </summary>
   public RequestInfo RequestInfo => _requestInfo;
+}
+
+public class DesignTimeYaverContext : IYaverContext {
+  /// <inheritdoc />
+  /// <summary>
+  ///   Gets the information about the incoming HTTP request.
+  /// </summary>
+  public RequestInfo RequestInfo { get; } = new(
+    UserId: Guid.Empty,
+    AcceptLanguage: string.Empty,
+    RequestId: string.Empty,
+    UserName: string.Empty,
+    Email: string.Empty,
+    GivenName: string.Empty,
+    FamilyName: string.Empty,
+    Roles: [],
+    Tenant: string.Empty
+  );
 }

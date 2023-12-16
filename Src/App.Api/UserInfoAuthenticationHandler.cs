@@ -56,10 +56,10 @@ public class UserInfoAuthenticationHandler(
 
 
     var x = new RequestInfo(
-      Guid.Parse(payload.Sub),
-      Request.Headers["accept-language"].FirstOrDefault() ?? "",
-      Request.Headers["x-request-id"].FirstOrDefault() ?? "",
-      payload.FirstOrDefault(p => p.Key == "preferred_username").Value?.ToString() ?? "",
+      UserId: Guid.Parse(payload.Sub),
+      AcceptLanguage: Request.Headers.AcceptLanguage,
+      RequestId: Request.Headers["x-request-id"].FirstOrDefault() ?? "",
+      UserName: payload.FirstOrDefault(p => p.Key == "preferred_username").Value?.ToString() ?? "",
       GivenName: payload.FirstOrDefault(p => p.Key == "given_name").Value?.ToString() ?? "",
       FamilyName: payload.FirstOrDefault(p => p.Key == "family_name").Value?.ToString() ?? "",
       Roles: ticket.Principal.Claims

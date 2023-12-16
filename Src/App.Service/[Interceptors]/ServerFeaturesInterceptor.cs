@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 
 using Grpc.Core;
 using Grpc.Core.Interceptors;
@@ -48,9 +49,30 @@ public class ServerFeaturesInterceptor : Interceptor {
 
   private static void SetFeatures(ServerCallContext context) {
     var httpContext = context.GetHttpContext();
+
+    // Console.WriteLine(JsonSerializer.Serialize(httpContext.Request.Headers, new JsonSerializerOptions { WriteIndented = true }));
+
     var yaverContextJson = httpContext.Request.Headers["x-yaver-context"];
     // if (!string.IsNullOrEmpty(yaverContextJson)) {
     var yaverContext = JsonSerializer.Deserialize<RequestInfo>(yaverContextJson);
+
+    // Console.WriteLine(JsonSerializer.Serialize(yaverContext, new JsonSerializerOptions { WriteIndented = true }));
+
     httpContext.Features.Set(yaverContext);
+    // httpContext.Features.Set(httpContext.Request.Headers["Accept-Language"]);
+
+    var cultureKey = yaverContext.AcceptLanguage;//  httpContext.Request.Headers["Accept-Language"];
+    if (!string.IsNullOrEmpty(cultureKey)) {
+      if (DoesCultureExist(cultureKey)) {
+        var culture = new CultureInfo(cultureKey);
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
+      }
+    }
+  }
+  private static bool DoesCultureExist(string cultureName) {
+    return CultureInfo.GetCultures(CultureTypes.AllCultures)
+        .Any(culture => string.Equals(culture.Name, cultureName,
+      StringComparison.CurrentCultureIgnoreCase));
   }
 }

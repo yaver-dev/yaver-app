@@ -5,13 +5,13 @@ using Admin.ServiceBase.Features.DatabaseServers;
 using FluentValidation;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 using Yaver.App;
 
 namespace Admin.Service.Features.DatabaseServers;
 
-public static class CreateDatabase
-{
+public static class CreateDatabase {
   private static readonly Func<ServiceDbContext, Guid, CancellationToken, Task<DatabaseServerResult?>>
     _getEntityForResultAsync =
       EF.CompileAsyncQuery((ServiceDbContext context, Guid id, CancellationToken ct) =>
@@ -28,8 +28,7 @@ public static class CreateDatabase
           ))
           .FirstOrDefault(c => c.Id == id));
 
-  private static DatabaseServer ToEntity(this CreateDatabaseServerCommand r)
-  {
+  private static DatabaseServer ToEntity(this CreateDatabaseServerCommand r) {
     return new DatabaseServer(
       host: r.Host,
       port: r.Port,
@@ -41,21 +40,31 @@ public static class CreateDatabase
 
   public sealed class Handler(
       ServiceDbContext db,
-      IValidator<CreateDatabaseServerCommand> validator
+      IValidator<CreateDatabaseServerCommand> validator,
+       IStringLocalizer<Validator> localizer
     )
-    : RpcCommandHandler<CreateDatabaseServerCommand, Result<DatabaseServerResult>>
-  {
+    : RpcCommandHandler<CreateDatabaseServerCommand, Result<DatabaseServerResult>> {
     public override async Task<Result<DatabaseServerResult>> ExecuteAsync(
       CreateDatabaseServerCommand command,
       CancellationToken ct
-    )
-    {
-      //validate command
-      var validationResult = await validator.ValidateAsync(command, ct);
+    ) {
 
-      if (!validationResult.IsValid)
-      {
-        return Result<DatabaseServerResult>.Invalid(validationResult.AsErrors());
+      //validate model
+      var modelValidation = validator.Validate(
+        instance: command,
+        options: o => o.IncludeRuleSets("Model"));
+
+      if (!modelValidation.IsValid) {
+        return Result.Invalid(modelValidation.AsErrors());
+      }
+      //validate app logic
+      var businessValidation = await validator.ValidateAsync(
+        instance: command,
+        options: o => o.IncludeRuleSets("Business"),
+        cancellation: ct);
+
+      if (!businessValidation.IsValid) {
+        return Result.Conflict(businessValidation.AsErrors());
       }
 
       var entity = command.ToEntity();
@@ -67,22 +76,26 @@ public static class CreateDatabase
     }
   }
 
-  public sealed class Validator : AbstractValidator<CreateDatabaseServerCommand>
-  {
-    public Validator(ServiceDbContext context)
-    {
-      RuleFor(x => x.Port)
+  public sealed class Validator : AbstractValidator<CreateDatabaseServerCommand> {
+    public Validator(ServiceDbContext context, IStringLocalizer<Validator> localizer) {
+      RuleSet("Model", () => {
+        RuleFor(x => x.Port)
         .NotNull()
         .NotEmpty()
         .GreaterThan(1024)
         .LessThan(100000);
 
-      RuleFor(x => x.Name)
-        .NotEmpty().WithMessage("Name is required.")
-        .MustAsync(async (id, ct) =>
-        {
-          return !await context.DatabaseServers.AnyAsync(x => x.Name == id, ct);
-        }).WithMessage("Name Must be unique");
+        RuleFor(x => x.Name)
+            .NotEmpty().MinimumLength(10);
+      });
+
+      RuleSet("Business", () => {
+        RuleFor(x => x.Name)
+          .MustAsync(async (name, ct) => {
+            return !await context.DatabaseServers.AnyAsync(x => x.Name == name, ct);
+          }).WithMessage(x => localizer["NameMustBeUnique"]);
+
+      });
     }
   }
 }

@@ -7,16 +7,16 @@
 ## Products
 ### Create Product
 POST {{BaseUrl}}/database-servers
-Accept-Language: en
+Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
 Content-Type: application/json
 {
 	"ConnectionStringFormat":"xxxxx",
-	"Host":"sadsaddfssdsa",
+	"Host":"tytytytyty",
 	"IsAvailable":true,
 	"IsDefault":true,
-	"Name":"3312122",
-	"Port":1222
+	"Name":"asdfaccsfas",
+	"Port":"9991"
 }
 
 ### Get Products

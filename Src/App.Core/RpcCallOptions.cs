@@ -20,7 +20,9 @@ public static class RpcCallOptions {
     IYaverContext context,
     CancellationToken ct) {
     return callOptions
-      .WithHeaders(new Metadata { { "x-yaver-context", JsonSerializer.Serialize(context.RequestInfo) } })
+      .WithHeaders(new Metadata {
+        { "x-yaver-context", JsonSerializer.Serialize(context.RequestInfo) }
+      })
       .WithCancellationToken(ct);
   }
 }

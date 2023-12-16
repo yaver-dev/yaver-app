@@ -47,8 +47,7 @@ public class UserInfoAuthenticationHandler(
       payload.Claims,
       SchemaName,
       "name",
-      RoleType
-    );
+      RoleType);
 
     AuthenticationTicket ticket = new(
       new ClaimsPrincipal(identity),
@@ -56,18 +55,18 @@ public class UserInfoAuthenticationHandler(
       SchemaName);
 
 
-    var x = new RequestInfo(
-      UserId: Guid.Parse(payload.Sub),
-      AcceptLanguage: Request.Headers.AcceptLanguage,
-      RequestId: Request.Headers["x-request-id"].FirstOrDefault() ?? "",
-      UserName: payload.FirstOrDefault(p => p.Key == "preferred_username").Value?.ToString() ?? "",
+    var requestInfo = new RequestInfo(
+      Guid.Parse(payload.Sub),
+      Request.Headers["accept-language"].FirstOrDefault() ?? "",
+      Request.Headers["x-request-id"].FirstOrDefault() ?? "",
+      payload.FirstOrDefault(p => p.Key == "preferred_username").Value?.ToString() ?? "",
       GivenName: payload.FirstOrDefault(p => p.Key == "given_name").Value?.ToString() ?? "",
       FamilyName: payload.FirstOrDefault(p => p.Key == "family_name").Value?.ToString() ?? "",
       Roles: ticket.Principal.Claims
         .Where(c => c.Type == RoleType)
         .Select(c => c.Value).ToList(),
       Email: payload.FirstOrDefault(p => p.Key == "email").Value?.ToString() ?? "",
-      Tenant: payload.FirstOrDefault(p => p.Key == "tenant").Value.ToString() ?? ""
+      Tenant: Request.Headers["tenant"].FirstOrDefault() ?? ""
     );
 
     Context.Features.Set(requestInfo);

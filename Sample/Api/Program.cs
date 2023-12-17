@@ -17,7 +17,8 @@ using Serilog;
 using Yaver.App;
 
 var builder = WebApplication.CreateSlimBuilder(args);
-builder.AddYaverLogger();
+
+builder.AddYaverLogger().AddYaverConfiguration();
 
 builder.Services.Configure<JsonOptions>(o =>
   o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
@@ -40,11 +41,9 @@ var supportedCultures = new[] { new CultureInfo("tr-TR"), new CultureInfo("en-UK
 
 var app = builder.Build();
 app.UseRequestLocalization(
-       new RequestLocalizationOptions {
-         DefaultRequestCulture = new("en-UK"),
-         SupportedCultures = supportedCultures,
-         SupportedUICultures = supportedCultures
-       });
+  new RequestLocalizationOptions {
+    DefaultRequestCulture = new("en-UK"), SupportedCultures = supportedCultures, SupportedUICultures = supportedCultures
+  });
 
 app
   .UseYaverExceptionHandler(logStructuredException: true)
@@ -63,8 +62,6 @@ app
 app.MapRpcHandlers(
   "Admin.ServiceBase",
   app.Configuration.GetSection("Services").GetValue<string>("ADMIN"));
-
-
 
 
 app.Run();
@@ -93,21 +90,23 @@ namespace Api {
 
 
       Log.Information(
-          $"request:{ctx.Request} response: {ctx.Response}");
+        $"request:{ctx.Request} response: {ctx.Response}");
     }
   }
+
   public class MyRequestLogger : IGlobalPreProcessor {
     public async Task PreProcessAsync(IPreProcessorContext ctx, CancellationToken ct) {
       await Task.CompletedTask;
       // var logger = ctx.HttpContext.Resolve<ILogger>();
 
       Log.Information(
-          $"request:{ctx.Request.GetType().FullName} path: {ctx.HttpContext.Request.Path}");
+        $"request:{ctx.Request.GetType().FullName} path: {ctx.HttpContext.Request.Path}"
+      );
 
       // var logger = ctx.RequestServices.GetRequiredService<ILogger>();
       // logger.LogInformation($"request:{req?.GetType().FullName} path: {ctx.Request.Path}");
 
-      var userInfo = ctx.HttpContext.Request.Headers["X-UserId"].FirstOrDefault();
+      var userInfo = ctx.HttpContext.Request.Headers["X-UserInfo"].FirstOrDefault();
       // if (userInfo == null) {
       // 	failures.Add(new("MissingHeaders", "The [X-UserId] header needs to be set!"));
       // 	await ctx.Response.SendErrorsAsync(failures, cancellation: ct); //sending response here
@@ -116,10 +115,13 @@ namespace Api {
 
 
       Console.WriteLine("Headers:------------------");
-      Console.WriteLine(JsonSerializer.Serialize(ctx.HttpContext.Request.Headers, new JsonSerializerOptions { WriteIndented = true }));
+      Console.WriteLine(JsonSerializer.Serialize(ctx.HttpContext.Request.Headers,
+        new JsonSerializerOptions { WriteIndented = true })
+      );
       Console.WriteLine("------------------");
       Console.WriteLine(
-        $"roles: {JsonSerializer.Serialize(ctx.HttpContext.User?.Claims.Where(c => c.Type == "roles").Select(c => c.Value).ToList())}");
+        $"roles: {JsonSerializer.Serialize(ctx.HttpContext.User?.Claims.Where(c => c.Type == "roles").Select(c => c.Value).ToList())}"
+      );
       Console.WriteLine("------------------");
       Console.WriteLine($"request:{ctx.HttpContext.Request?.GetType().FullName} path: {ctx.HttpContext.Request.Path}");
       Console.WriteLine("------------------");

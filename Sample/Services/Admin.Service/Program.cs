@@ -35,8 +35,8 @@ builder.Services.AddLocalization();
 builder.Services.Configure<RequestLocalizationOptions>(options => {
   var supportedCultures = new[] { "en-UK", "tr" };
   options.SetDefaultCulture(supportedCultures[0])
-      .AddSupportedCultures(supportedCultures)
-      .AddSupportedUICultures(supportedCultures);
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
 });
 builder.Services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
 builder.Services.AddDistributedMemoryCache();
@@ -57,12 +57,13 @@ var context = new ServiceDbContext(app.Configuration,
       UserId: Guid.NewGuid(),
       AcceptLanguage: "",
       RequestId: "",
+      RequestIp: "",
+      UserAgent: "",
       UserName: "",
       Email: "",
       GivenName: "",
       FamilyName: "",
-      Roles: [],
-      Tenant: ""
+      Roles: []
     )
   )
 );

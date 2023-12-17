@@ -16,7 +16,7 @@ public static class ListDatabaseServers {
     : ListDatabaseServersEndpointBase<Mapper> {
     public override async Task HandleAsync(ListDatabaseServersRequest req, CancellationToken ct) {
       var callOptions = new CallOptions()
-        .SetContext(yaverContext, ct);
+        .SetYaverContext(yaverContext, ct);
 
       var command = Map.ToCommand(req);
       Console.WriteLine("command: " + JsonSerializer.Serialize(command));

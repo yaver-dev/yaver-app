@@ -13,7 +13,7 @@ public static class UpdateDatabaseServer {
     : UpdateDatabaseServerEndpointBase<Mapper> {
     public override async Task HandleAsync(UpdateDatabaseServerRequest req, CancellationToken ct) {
       var callOptions = new CallOptions()
-        .SetContext(yaverContext, ct);
+        .SetYaverContext(yaverContext, ct);
 
       var result = await Map.ToCommand(req)
         .RemoteExecuteAsync(callOptions);

@@ -27,10 +27,7 @@ public class UserInfoAuthenticationHandler(
   /// </summary>
   /// <returns>A task that represents the asynchronous operation. The task result contains the authentication result.</returns>
   protected override Task<AuthenticateResult> HandleAuthenticateAsync() {
-    if (Context
-          .GetEndpoint()?
-          .Metadata.OfType<AllowAnonymousAttribute>()
-          .Any() is null or true) {
+    if (Context.GetEndpoint()?.Metadata.OfType<AllowAnonymousAttribute>().Any() is null or true) {
       return Task.FromResult(AuthenticateResult.NoResult());
     }
 
@@ -40,8 +37,8 @@ public class UserInfoAuthenticationHandler(
       return Task.FromResult(AuthenticateResult.Fail($"{SchemaName} header not found"));
     }
 
-
-    var payload = JwtPayload.Base64UrlDeserialize(xUserInfo) ?? throw new ArgumentException(null, "payload");
+    var payload = JwtPayload.Base64UrlDeserialize(xUserInfo)
+                  ?? throw new ArgumentException(null, "payload");
 
     ClaimsIdentity identity = new(
       payload.Claims,
@@ -52,29 +49,31 @@ public class UserInfoAuthenticationHandler(
     AuthenticationTicket ticket = new(
       new ClaimsPrincipal(identity),
       new AuthenticationProperties(),
-      SchemaName);
-
+      SchemaName
+    );
 
     var requestInfo = new RequestInfo(
       Guid.Parse(payload.Sub),
-      Request.Headers["accept-language"].FirstOrDefault() ?? "",
+      Request.Headers.AcceptLanguage.ToString(),
       Request.Headers["x-request-id"].FirstOrDefault() ?? "",
+      Request.Headers["x-forwarded-for"].FirstOrDefault() ?? "",
+      Request.Headers.UserAgent.ToString(),
       payload.FirstOrDefault(p => p.Key == "preferred_username").Value?.ToString() ?? "",
       GivenName: payload.FirstOrDefault(p => p.Key == "given_name").Value?.ToString() ?? "",
       FamilyName: payload.FirstOrDefault(p => p.Key == "family_name").Value?.ToString() ?? "",
       Roles: ticket.Principal.Claims
         .Where(c => c.Type == RoleType)
         .Select(c => c.Value).ToList(),
-      Email: payload.FirstOrDefault(p => p.Key == "email").Value?.ToString() ?? "",
-      Tenant: Request.Headers["tenant"].FirstOrDefault() ?? ""
+      Email: payload.FirstOrDefault(p => p.Key == "email").Value?.ToString() ?? ""
     );
 
     Context.Features.Set(requestInfo);
 
-    // var roles = ticket.Principal.Claims
-    //   .Where(c => c.Type == RoleType)
-    //   .Select(c => c.Value)
-    //   .ToList();
+    var tenantInfo = new TenantInfo(
+      payload.FirstOrDefault(p => p.Key == "tenant").Value?.ToString() ?? ""
+    );
+
+    Context.Features.Set(tenantInfo);
 
     return Task.FromResult(AuthenticateResult.Success(ticket));
   }

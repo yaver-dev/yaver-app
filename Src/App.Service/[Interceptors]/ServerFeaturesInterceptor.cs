@@ -61,7 +61,7 @@ public class ServerFeaturesInterceptor : Interceptor {
     httpContext.Features.Set(yaverContext);
     // httpContext.Features.Set(httpContext.Request.Headers["Accept-Language"]);
 
-    var cultureKey = yaverContext.AcceptLanguage;//  httpContext.Request.Headers["Accept-Language"];
+    var cultureKey = yaverContext.AcceptLanguage; //  httpContext.Request.Headers["Accept-Language"];
     if (!string.IsNullOrEmpty(cultureKey)) {
       if (DoesCultureExist(cultureKey)) {
         var culture = new CultureInfo(cultureKey);
@@ -69,10 +69,15 @@ public class ServerFeaturesInterceptor : Interceptor {
         Thread.CurrentThread.CurrentUICulture = culture;
       }
     }
+
+    var tenantContextJson = httpContext.Request.Headers["x-tenant-context"];
+    var tenantContext = JsonSerializer.Deserialize<TenantInfo>(tenantContextJson);
+    httpContext.Features.Set(tenantContext);
   }
+
   private static bool DoesCultureExist(string cultureName) {
     return CultureInfo.GetCultures(CultureTypes.AllCultures)
-        .Any(culture => string.Equals(culture.Name, cultureName,
-      StringComparison.CurrentCultureIgnoreCase));
+      .Any(culture => string.Equals(culture.Name, cultureName,
+        StringComparison.CurrentCultureIgnoreCase));
   }
 }

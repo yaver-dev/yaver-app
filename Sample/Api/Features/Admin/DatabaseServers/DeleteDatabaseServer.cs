@@ -16,7 +16,7 @@ public static class DeleteDatabaseServer
     public override async Task HandleAsync(DeleteDatabaseServerRequest req, CancellationToken ct)
     {
       var callOptions = new CallOptions()
-        .SetContext(yaverContext, ct);
+        .SetYaverContext(yaverContext, ct);
 
       var result = await Map.ToCommand(req)
         .RemoteExecuteAsync(callOptions);

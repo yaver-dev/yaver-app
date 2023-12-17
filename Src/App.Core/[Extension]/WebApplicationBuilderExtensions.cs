@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 
 using Serilog;
 
@@ -6,14 +7,13 @@ using Serilog;
 namespace Yaver.App;
 
 /// <summary>
-///   Provides extension methods for configuring logging in a <see cref="Microsoft.AspNetCore.Builder.WebApplication" />.
+///   Provides extension methods for configuratıon
 /// </summary>
-public static class AddYaverLoggerExtension {
+public static class WebApplicationBuilderExtensions {
   /// <summary>
   ///   Provides a way to configure a <see cref="Microsoft.AspNetCore.Builder.WebApplication" />.
   /// </summary>
-  public static WebApplicationBuilder AddYaverLogger(
-    this WebApplicationBuilder builder) {
+  public static WebApplicationBuilder AddYaverLogger(this WebApplicationBuilder builder) {
     _ = builder.Host.UseSerilog((ctx, lc) => lc
       .ReadFrom.Configuration(ctx.Configuration)
       .Enrich.WithProperty("AppName", Environment.GetEnvironmentVariable("YAVER_APP_NAME") ?? "YAVER_APP")
@@ -21,7 +21,7 @@ public static class AddYaverLoggerExtension {
 
     return builder;
   }
-
+  
   // public static WebApplicationBuilder AddYaverLogger(
   //   this WebApplicationBuilder builder,
   //   Action<HostBuilderContext, LoggerConfiguration> auditLogConfiguraton) {
@@ -35,7 +35,19 @@ public static class AddYaverLoggerExtension {
   //     }
   //   });
   //   return builder;
-  // }w
+  // }
+
+  /// <summary>
+  ///   Provides a way to add configuration jsons
+  /// </summary>
+  public static WebApplicationBuilder AddYaverConfiguration(this WebApplicationBuilder builder) {
+    builder.Configuration
+      .AddJsonFile("appsettings.json", true, true)
+      .AddJsonFile("secrets/appsecrets.json", optional: true, true)
+      .AddEnvironmentVariables();
+
+    return builder;
+  }
 }
 
 // public class LogWrapperDestructuringPolicy : IDestructuringPolicy {

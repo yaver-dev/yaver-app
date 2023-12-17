@@ -13,7 +13,7 @@ public static class GetDatabaseServer {
     : GetDatabaseServerEndpointBase<Mapper> {
     public override async Task HandleAsync(GetDatabaseServerRequest req, CancellationToken ct) {
       var callOptions = new CallOptions()
-        .SetContext(yaverContext, ct);
+        .SetYaverContext(yaverContext, ct);
 
       var command = Map.ToCommand(req);
       var result = await command.RemoteExecuteAsync(callOptions);

@@ -11,12 +11,13 @@ public record RequestInfo(
   Guid UserId,
   string AcceptLanguage,
   string RequestId,
+  string RequestIp,
+  string UserAgent,
   string UserName,
   string Email,
   string GivenName,
   string FamilyName,
-  List<string> Roles,
-  string Tenant
+  List<string> Roles
 );
 
 // Provides access to the request information.
@@ -90,11 +91,12 @@ public class DesignTimeYaverContext : IYaverContext {
     UserId: Guid.Empty,
     AcceptLanguage: string.Empty,
     RequestId: string.Empty,
+    string.Empty,
+    string.Empty,
     UserName: string.Empty,
     Email: string.Empty,
     GivenName: string.Empty,
     FamilyName: string.Empty,
-    Roles: [],
-    Tenant: string.Empty
+    Roles: []
   );
 }

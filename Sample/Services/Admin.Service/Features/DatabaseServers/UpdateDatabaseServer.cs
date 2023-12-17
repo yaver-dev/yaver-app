@@ -57,7 +57,7 @@ public static class UpdateDatabaseServer
 
       if (!validationResult.IsValid)
       {
-        return Result<DatabaseServerResult>.Invalid(validationResult.AsErrors());
+        return Result<DatabaseServerResult>.Invalid(validationResult.AsValidationErrors());
       }
 
       var entity = await _getEntityForUpdateAsync(db, command.Id, ct);

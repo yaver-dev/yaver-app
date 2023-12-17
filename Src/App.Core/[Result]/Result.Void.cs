@@ -65,13 +65,6 @@ public class Result : Result<Result> {
   }
 
   /// <summary>
-  /// Represents a result with no return value.
-  /// </summary>
-  public new static Result Error(List<ValidationError> validationErrors) {
-    return new Result(ResultStatus.Error) { ValidationErrors = validationErrors };
-  }
-
-  /// <summary>
   ///   Represents an error that occurred during the execution of the service.
   ///   Sets the CorrelationId property to the provided value
   ///   Error messages may be provided and will be exposed via the Errors property.
@@ -148,14 +141,6 @@ public class Result : Result<Result> {
   }
 
   /// <summary>
-  /// Represents the result of an operation that does not return a value.
-  /// </summary>
-  public static Result Unauthorized(params string[] errorMessages) {
-    return new Result(ResultStatus.Unauthorized) { Errors = errorMessages };
-  }
-
-
-  /// <summary>
   ///   Represents a situation where a service is in conflict due to the current state of a resource,
   ///   such as an edit conflict between multiple concurrent updates.
   ///   See also HTTP 409 Conflict: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_client_errors
@@ -175,13 +160,6 @@ public class Result : Result<Result> {
   /// <returns>A Result<typeparamref name="T" /></returns>
   public new static Result Conflict(params string[] errorMessages) {
     return new Result(ResultStatus.Conflict) { Errors = errorMessages };
-  }
-
-  /// <summary>
-  /// Represents the result of an operation.
-  /// </summary>
-  public new static Result Conflict(List<ValidationError> validationErrors) {
-    return new Result(ResultStatus.Conflict) { ValidationErrors = validationErrors };
   }
 
   /// <summary>

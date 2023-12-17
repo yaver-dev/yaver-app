@@ -157,14 +157,6 @@ public class Result<T> : IResult {
   }
 
   /// <summary>
-  /// Creates a new instance of the <see cref="Result{T}"/> class with the specified validation errors and sets the result status to Error.
-  /// </summary>
-  /// <param name="validationErrors">The list of validation errors.</param>
-  /// <returns>A new instance of the <see cref="Result{T}"/> class with the specified validation errors and result status set to Error.</returns>
-  public static Result<T> Error(List<ValidationError> validationErrors) {
-    return new Result<T>(ResultStatus.Error) { ValidationErrors = validationErrors };
-  }
-  /// <summary>
   ///   Represents a validation error that prevents the underlying service from completing.
   /// </summary>
   /// <param name="validationError">The validation error encountered</param>
@@ -219,15 +211,6 @@ public class Result<T> : IResult {
   }
 
   /// <summary>
-  /// Creates a forbidden result with the specified error messages.
-  /// </summary>
-  /// <param name="errorMessages">The error messages.</param>
-  /// <returns>A forbidden result.</returns>
-  public static Result<T> Forbidden(params string[] errorMessages) {
-    return new Result<T>(ResultStatus.Forbidden) { Errors = errorMessages };
-  }
-
-  /// <summary>
   ///   This is similar to Forbidden, but should be used when the user has not authenticated or has attempted to authenticate
   ///   but failed.
   ///   See also HTTP 401 Unauthorized: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_client_errors
@@ -235,15 +218,6 @@ public class Result<T> : IResult {
   /// <returns>A Result<typeparamref name="T" /></returns>
   public static Result<T> Unauthorized() {
     return new Result<T>(ResultStatus.Unauthorized);
-  }
-
-  /// <summary>
-  /// Creates a new instance of the <see cref="Result{T}"/> class with the <see cref="ResultStatus.Unauthorized"/> status and the specified error messages.
-  /// </summary>
-  /// <param name="errorMessages">The error messages.</param>
-  /// <returns>A new instance of the <see cref="Result{T}"/> class.</returns>
-  public static Result<T> Unauthorized(params string[] errorMessages) {
-    return new Result<T>(ResultStatus.Unauthorized) { Errors = errorMessages };
   }
 
   /// <summary>

@@ -39,33 +39,46 @@ public static class CreateDatabase {
   }
 
   public sealed class Handler(
-      ServiceDbContext db,
-      IValidator<CreateDatabaseServerCommand> validator,
-       IStringLocalizer<Validator> localizer
-    )
+    ServiceDbContext db,
+    IValidator<CreateDatabaseServerCommand> validator,
+    IStringLocalizer<Validator> localizer
+  )
     : RpcCommandHandler<CreateDatabaseServerCommand, Result<DatabaseServerResult>> {
     public override async Task<Result<DatabaseServerResult>> ExecuteAsync(
       CreateDatabaseServerCommand command,
       CancellationToken ct
     ) {
-
       //validate model
       var modelValidation = validator.Validate(
         instance: command,
-        options: o => o.IncludeRuleSets("Model"));
+        options: o => o.IncludeRuleSets("Model")
+      );
 
       if (!modelValidation.IsValid) {
-        return Result.Invalid(modelValidation.AsErrors());
+        return Result.Invalid(modelValidation.AsValidationErrors());
       }
-      //validate app logic
+
+      //validate business rules - guard
       var businessValidation = await validator.ValidateAsync(
         instance: command,
         options: o => o.IncludeRuleSets("Business"),
-        cancellation: ct);
+        cancellation: ct
+      );
 
       if (!businessValidation.IsValid) {
         return Result.Conflict(businessValidation.AsErrors());
       }
+
+      // //validate business rules - flow
+      // var fakeErrors = new List<string> { "Business flow error 1" };
+      //
+      // if (fakeErrors.Count > 0) {
+      //   return Result<DatabaseServerResult>.Error(fakeErrors.ToArray());
+      //   // return Result<DatabaseServerResult>.Error("Falanca filanca");
+      // }
+      //
+      // //validate business rules - another flow
+      // return Result<DatabaseServerResult>.Error("Business flow error 1");
 
       var entity = command.ToEntity();
 
@@ -80,13 +93,13 @@ public static class CreateDatabase {
     public Validator(ServiceDbContext context, IStringLocalizer<Validator> localizer) {
       RuleSet("Model", () => {
         RuleFor(x => x.Port)
-        .NotNull()
-        .NotEmpty()
-        .GreaterThan(1024)
-        .LessThan(100000);
+          .NotNull()
+          .NotEmpty()
+          .GreaterThan(1024)
+          .LessThan(100000);
 
         RuleFor(x => x.Name)
-            .NotEmpty().MinimumLength(10);
+          .NotEmpty().MinimumLength(10);
       });
 
       RuleSet("Business", () => {
@@ -94,7 +107,6 @@ public static class CreateDatabase {
           .MustAsync(async (name, ct) => {
             return !await context.DatabaseServers.AnyAsync(x => x.Name == name, ct);
           }).WithMessage(x => localizer["NameMustBeUnique"]);
-
       });
     }
   }

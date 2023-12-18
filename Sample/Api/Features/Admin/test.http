@@ -4,8 +4,8 @@
 
 ###
 
-## Products
-### Create Product
+## Database Servers
+### Create Database Server
 POST {{BaseUrl}}/database-servers
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
@@ -19,7 +19,7 @@ Content-Type: application/json
 	"Port":"9991"
 }
 
-### Get Products
+### Get Database Servers
 GET {{BaseUrl}}/database-servers
     ?offset=0
     &limit=50
@@ -30,16 +30,16 @@ X-UserInfo: {{xUserInfo}}
 Accept-Language: tr
 # Content-Type: application/json
 
-### Get Product by Id
-GET {{BaseUrl}}/database-servers/9ddf102a-99fb-4dae-be8a-3cb05baf4f1c
+### Get Database Server by Id
+GET {{BaseUrl}}/database-servers/ea3afebc-8fa7-4211-b4c8-43ec35f41b19
 accept: application/json
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
 # Content-Type: application/json
 
 
-### Update Product
-PUT {{BaseUrl}}/database-servers/fe0ae6f3-02dd-4d2b-9b9b-282b9151b441
+### Update Database Server
+PUT {{BaseUrl}}/database-servers/ea3afebc-8fa7-4211-b4c8-43ec35f41b19
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
 Content-Type: application/json
@@ -52,21 +52,21 @@ Content-Type: application/json
 	"Port":1765
 }
 
-### Update Product Bad Request
+### Update Database Server Bad Request
 PUT {{BaseUrl}}/database-servers/00000000-0000-0000-0000-000000000005
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}
 Content-Type: application/json
 {}
 
-### Get Product Bad Request
+### Get Database Server Bad Request
 GET {{BaseUrl}}/database-servers/00000000-0000-0000-0000-000000000FFF
 accept: application/json
 X-UserInfo: {{xUserInfo}}
 Accept-Language: tr
 
 
-### Delete Product
+### Delete Database Server
 DELETE {{BaseUrl}}/database-servers/9ddf102a-99fb-4dae-be8a-3cb05baf4f1c
 Accept-Language: tr
 X-UserInfo: {{xUserInfo}}

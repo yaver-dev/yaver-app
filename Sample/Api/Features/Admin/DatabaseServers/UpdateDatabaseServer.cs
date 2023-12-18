@@ -18,11 +18,12 @@ public static class UpdateDatabaseServer {
       var result = await Map.ToCommand(req)
         .RemoteExecuteAsync(callOptions);
 
-      if (result.IsSuccess) {
-        await SendOkAsync(Map.ToResponse(result), ct);
-      } else {
+      if (result.IsFailure)) {
         await SendResultAsync(result.ToHttpResponse());
+        return;
       }
+
+      await SendNoContentAsync();
     }
   }
 

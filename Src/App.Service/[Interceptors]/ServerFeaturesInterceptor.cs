@@ -71,6 +71,7 @@ public class ServerFeaturesInterceptor : Interceptor {
     }
 
     var tenantContextJson = httpContext.Request.Headers["x-tenant-context"];
+    if (string.IsNullOrWhiteSpace(tenantContextJson)) return;
     var tenantContext = JsonSerializer.Deserialize<TenantInfo>(tenantContextJson);
     httpContext.Features.Set(tenantContext);
   }

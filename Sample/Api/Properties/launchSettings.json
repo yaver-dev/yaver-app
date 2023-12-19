@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "App": {
+    "Api": {
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {

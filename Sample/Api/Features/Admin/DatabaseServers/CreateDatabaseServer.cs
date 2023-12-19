@@ -9,11 +9,20 @@ using Yaver.App;
 namespace Api.Features.Admin.DatabaseServers;
 
 public static class CreateDatabaseServer {
-  public sealed class Endpoint(IYaverContext yaverContext)
+  public sealed class
+    Endpoint(IRequestMetadata requestMetadata, IAuditMetadata auditMetadata, ITenantMetadata tenantMetadata)
     : CreateDatabaseServerEndpointBase<Mapper> {
     public override async Task HandleAsync(CreateDatabaseServerRequest req, CancellationToken ct) {
       var callOptions = new CallOptions()
-        .SetContext(yaverContext, ct);
+        // .WithYaverMetadata(
+        //   cancellationToken: ct,
+        //   requestMetadata: requestMetadata,
+        //   auditMetadata: auditMetadata
+        // );
+        .WithRequestMetadata(requestMetadata)
+        .WithAuditMetadata(auditMetadata)
+        .WithTenantMetadata(tenantMetadata)
+        .WithCancellationToken(ct);
 
       var result = await Map.ToCommand(req)
         .RemoteExecuteAsync(callOptions);

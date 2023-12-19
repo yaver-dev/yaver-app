@@ -9,11 +9,15 @@ using Yaver.App;
 namespace Api.Features.Admin.DatabaseServers;
 
 public static class GetDatabaseServer {
-  public sealed class Endpoint(IYaverContext yaverContext)
+  public sealed class Endpoint(IRequestMetadata requestMetadata, IAuditMetadata auditMetadata)
     : GetDatabaseServerEndpointBase<Mapper> {
     public override async Task HandleAsync(GetDatabaseServerRequest req, CancellationToken ct) {
       var callOptions = new CallOptions()
-        .SetContext(yaverContext, ct);
+        .WithYaverMetadata(
+          cancellationToken: ct,
+          requestMetadata: requestMetadata,
+          auditMetadata: auditMetadata
+        );
 
       var command = Map.ToCommand(req);
       var result = await command.RemoteExecuteAsync(callOptions);

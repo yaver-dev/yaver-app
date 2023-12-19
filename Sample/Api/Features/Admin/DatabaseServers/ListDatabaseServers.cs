@@ -12,11 +12,15 @@ using Yaver.App;
 namespace Api.Features.Admin.DatabaseServers;
 
 public static class ListDatabaseServers {
-  public sealed class Endpoint(IYaverContext yaverContext)
+  public sealed class Endpoint(IRequestMetadata requestMetadata, IAuditMetadata auditMetadata)
     : ListDatabaseServersEndpointBase<Mapper> {
     public override async Task HandleAsync(ListDatabaseServersRequest req, CancellationToken ct) {
       var callOptions = new CallOptions()
-        .SetContext(yaverContext, ct);
+        .WithYaverMetadata(
+          cancellationToken: ct,
+          requestMetadata: requestMetadata,
+          auditMetadata: auditMetadata
+        );
 
       var command = Map.ToCommand(req);
       Console.WriteLine("command: " + JsonSerializer.Serialize(command));

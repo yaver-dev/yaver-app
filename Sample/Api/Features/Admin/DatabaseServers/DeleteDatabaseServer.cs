@@ -10,13 +10,14 @@ namespace Api.Features.Admin.DatabaseServers;
 
 public static class DeleteDatabaseServer
 {
-  public sealed class Endpoint(IYaverContext yaverContext)
+  public sealed class Endpoint(IRequestMetadata requestMetadata)
     : DeleteDatabaseServerEndpointBase<Mapper>
   {
     public override async Task HandleAsync(DeleteDatabaseServerRequest req, CancellationToken ct)
     {
       var callOptions = new CallOptions()
-        .SetContext(yaverContext, ct);
+        .WithCancellationToken(ct)
+        .WithRequestMetadata(requestMetadata);
 
       var result = await Map.ToCommand(req)
         .RemoteExecuteAsync(callOptions);

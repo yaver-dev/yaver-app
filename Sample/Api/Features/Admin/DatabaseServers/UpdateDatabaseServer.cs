@@ -9,20 +9,22 @@ using Yaver.App;
 namespace Api.Features.Admin.DatabaseServers;
 
 public static class UpdateDatabaseServer {
-  public sealed class Endpoint(IYaverContext yaverContext)
+  public sealed class Endpoint(IRequestMetadata requestMetadata)
     : UpdateDatabaseServerEndpointBase<Mapper> {
     public override async Task HandleAsync(UpdateDatabaseServerRequest req, CancellationToken ct) {
       var callOptions = new CallOptions()
-        .SetContext(yaverContext, ct);
+        .WithCancellationToken(ct)
+        .WithRequestMetadata(requestMetadata);
 
       var result = await Map.ToCommand(req)
         .RemoteExecuteAsync(callOptions);
 
-      if (result.IsSuccess) {
-        await SendOkAsync(Map.ToResponse(result), ct);
-      } else {
+      if (result.IsFailure) {
         await SendResultAsync(result.ToHttpResponse());
+        return;
       }
+
+      await SendNoContentAsync(ct);
     }
   }
 

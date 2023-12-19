@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 
 using Grpc.Core;
 using Grpc.Core.Interceptors;
@@ -48,9 +49,43 @@ public class ServerFeaturesInterceptor : Interceptor {
 
   private static void SetFeatures(ServerCallContext context) {
     var httpContext = context.GetHttpContext();
-    var yaverContextJson = httpContext.Request.Headers["x-yaver-context"];
-    // if (!string.IsNullOrEmpty(yaverContextJson)) {
-    var yaverContext = JsonSerializer.Deserialize<RequestInfo>(yaverContextJson);
-    httpContext.Features.Set(yaverContext);
+    var cultureKey = string.Empty;
+
+    var requestMetadata = httpContext.Request.Headers["x-request-metadata"];
+
+    if (!string.IsNullOrWhiteSpace(requestMetadata)) {
+      var requestInfo = JsonSerializer.Deserialize<RequestInfo>(requestMetadata!);
+      ArgumentNullException.ThrowIfNull(requestInfo);
+      httpContext.Features.Set(requestInfo);
+      cultureKey = requestInfo.AcceptLanguage;
+    }
+
+    if (!string.IsNullOrEmpty(cultureKey)) {
+      if (DoesCultureExist(cultureKey)) {
+        var culture = new CultureInfo(cultureKey);
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
+      }
+    }
+
+    var auditMetadata = httpContext.Request.Headers["x-audit-metadata"];
+
+    if (!string.IsNullOrWhiteSpace(auditMetadata)) {
+      var auditInfo = JsonSerializer.Deserialize<AuditInfo>(auditMetadata!);
+      ArgumentNullException.ThrowIfNull(auditInfo);
+      httpContext.Features.Set(auditInfo);
+    }
+
+    var tenantContextJson = httpContext.Request.Headers["x-tenant-metadata"];
+    if (string.IsNullOrWhiteSpace(tenantContextJson)) return;
+    var tenantInfo = JsonSerializer.Deserialize<TenantInfo>(tenantContextJson!);
+    ArgumentNullException.ThrowIfNull(tenantInfo);
+    httpContext.Features.Set(tenantInfo);
+  }
+
+  private static bool DoesCultureExist(string cultureName) {
+    return CultureInfo.GetCultures(CultureTypes.AllCultures)
+      .Any(culture => string.Equals(culture.Name, cultureName,
+        StringComparison.CurrentCultureIgnoreCase));
   }
 }

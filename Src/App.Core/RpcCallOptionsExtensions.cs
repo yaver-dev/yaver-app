@@ -4,7 +4,16 @@ using Grpc.Core;
 
 namespace Yaver.App;
 
+/// <summary>
+/// Provides extension methods for the <see cref="CallOptions"/> class to add request metadata, audit metadata, tenant metadata, and Yaver metadata.
+/// </summary>
 public static class RpcCallOptionsExtensions {
+  /// <summary>
+  /// Extends the CallOptions class with a method to add request metadata.
+  /// </summary>
+  /// <param name="callOptions">The CallOptions instance.</param>
+  /// <param name="metadata">The request metadata.</param>
+  /// <returns>The updated CallOptions instance.</returns>
   public static CallOptions WithRequestMetadata(
     this CallOptions callOptions,
     IRequestMetadata metadata
@@ -15,6 +24,9 @@ public static class RpcCallOptionsExtensions {
     return callOptions.WithHeaders(headers);
   }
 
+  /// <summary>
+  /// Represents options for making a call.
+  /// </summary>
   public static CallOptions WithAuditMetadata(
     this CallOptions callOptions,
     IAuditMetadata metadata
@@ -25,6 +37,9 @@ public static class RpcCallOptionsExtensions {
     return callOptions.WithHeaders(headers);
   }
 
+  /// <summary>
+  /// Represents the options for a gRPC call.
+  /// </summary>
   public static CallOptions WithTenantMetadata(
     this CallOptions callOptions,
     ITenantMetadata metadata
@@ -35,6 +50,9 @@ public static class RpcCallOptionsExtensions {
     return callOptions.WithHeaders(headers);
   }
 
+  /// <summary>
+  /// Represents the options for making a call.
+  /// </summary>
   public static CallOptions WithYaverMetadata(
     this CallOptions callOptions,
     CancellationToken cancellationToken = new(),

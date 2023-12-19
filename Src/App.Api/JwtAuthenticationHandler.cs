@@ -8,19 +8,29 @@ using Microsoft.Extensions.Options;
 
 namespace Yaver.App;
 
+/// <summary>
+/// Custom authentication handler for JWT bearer authentication.
+/// </summary>
 public class JwtAuthenticationHandler : JwtBearerHandler {
+  /// <summary>
+  /// Handles JWT authentication for the API.
+  /// </summary>
   public JwtAuthenticationHandler(
     IOptionsMonitor<JwtBearerOptions> options,
     ILoggerFactory logger,
     UrlEncoder encoder
   ) : base(options, logger, encoder) { }
-  
+
+  /// <summary>
+  /// Handles the authentication process asynchronously.
+  /// </summary>
+  /// <returns>A task that represents the asynchronous operation. The task result contains the authentication result.</returns>
   protected override async Task<AuthenticateResult> HandleAuthenticateAsync() {
 
     var result = await base.HandleAuthenticateAsync();
 
     if (!result.Succeeded) return result;
-    
+
     var authorization = Request.Headers.Authorization.ToString();
 
     var token = authorization["Bearer ".Length..].Trim();
@@ -56,8 +66,8 @@ public class JwtAuthenticationHandler : JwtBearerHandler {
     );
 
     Context.Features.Set(tenantInfo);
-    
+
     return result;
   }
-  
+
 }

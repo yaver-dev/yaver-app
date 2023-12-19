@@ -4,32 +4,60 @@ using Grpc.Core;
 
 namespace Yaver.App;
 
-/// <summary>
-///   Provides extension methods for gRPC call options used in Yaver.
-/// </summary>
 public static class RpcCallOptionsExtensions {
-  /// <summary>
-  ///   Sets the context for the gRPC call options.
-  /// </summary>
-  /// <param name="callOptions">The gRPC call options.</param>
-  /// <param name="context">The Yaver context.</param>
-  /// <param name="ct">The cancellation token.</param>
-  /// <returns>The updated gRPC call options.</returns>
-  public static CallOptions SetYaverContext(
+  public static CallOptions WithRequestMetadata(
     this CallOptions callOptions,
-    IYaverContext context,
-    CancellationToken ct
+    IRequestMetadata metadata
   ) {
-    return callOptions
-      .WithHeaders(new Metadata { { "x-yaver-context", JsonSerializer.Serialize(context.RequestInfo) } })
-      .WithCancellationToken(ct);
+    if (metadata.RequestInfo == null) return callOptions;
+    var headers = callOptions.Headers ?? [];
+    headers.Add("x-request-metadata", JsonSerializer.Serialize(metadata.RequestInfo));
+    return callOptions.WithHeaders(headers);
   }
 
-  public static CallOptions SetTenantContext(
+  public static CallOptions WithAuditMetadata(
     this CallOptions callOptions,
-    ITenantContext context
+    IAuditMetadata metadata
   ) {
-    return callOptions
-      .WithHeaders(new Metadata { { "x-tenant-context", JsonSerializer.Serialize(context.TenantInfo) } });
+    if (metadata.AuditInfo == null) return callOptions;
+    var headers = callOptions.Headers ?? [];
+    headers.Add("x-audit-metadata", JsonSerializer.Serialize(metadata.AuditInfo));
+    return callOptions.WithHeaders(headers);
+  }
+
+  public static CallOptions WithTenantMetadata(
+    this CallOptions callOptions,
+    ITenantMetadata metadata
+  ) {
+    if (metadata.TenantInfo == null) return callOptions;
+    var headers = callOptions.Headers ?? [];
+    headers.Add("x-tenant-metadata", JsonSerializer.Serialize(metadata.TenantInfo));
+    return callOptions.WithHeaders(headers);
+  }
+
+  public static CallOptions WithYaverMetadata(
+    this CallOptions callOptions,
+    CancellationToken cancellationToken = new(),
+    IRequestMetadata? requestMetadata = null,
+    IAuditMetadata? auditMetadata = null,
+    ITenantMetadata? tenantMetadata = null
+  ) {
+    var headers = callOptions.Headers ?? [];
+
+    if (requestMetadata?.RequestInfo != null) {
+      headers.Add("x-request-metadata", JsonSerializer.Serialize(requestMetadata.RequestInfo));
+    }
+
+    if (auditMetadata?.AuditInfo != null) {
+      headers.Add("x-audit-metadata", JsonSerializer.Serialize(auditMetadata.AuditInfo));
+    }
+
+    if (tenantMetadata?.TenantInfo != null) {
+      headers.Add("x-tenant-metadata", JsonSerializer.Serialize(tenantMetadata.TenantInfo));
+    }
+
+    return headers.Count < 1
+      ? callOptions.WithCancellationToken(cancellationToken)
+      : callOptions.WithHeaders(headers).WithCancellationToken(cancellationToken);
   }
 }

@@ -16,11 +16,10 @@ namespace Yaver.App;
 public class UserInfoAuthenticationHandler(
   IOptionsMonitor<AuthenticationSchemeOptions> options,
   ILoggerFactory logger,
-  UrlEncoder encoder,
-  ISystemClock clock
-) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder, clock) {
+  UrlEncoder encoder
+) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder) {
   public const string SchemaName = "UserInfo";
-  internal const string RoleType = "roles";
+  private const string RoleType = "roles";
 
   /// <summary>
   ///   Authenticates the user's credentials based on the provided X-User-Info header.
@@ -37,14 +36,18 @@ public class UserInfoAuthenticationHandler(
       return Task.FromResult(AuthenticateResult.Fail($"{SchemaName} header not found"));
     }
 
-    var payload = JwtPayload.Base64UrlDeserialize(xUserInfo)
-                  ?? throw new ArgumentException(null, "payload");
+    var payload = JwtPayload.Base64UrlDeserialize(xUserInfo);
+
+    if (payload == null) {
+      return Task.FromResult(AuthenticateResult.Fail($"could not parse {SchemaName}."));
+    }
 
     ClaimsIdentity identity = new(
       payload.Claims,
       SchemaName,
       "name",
-      RoleType);
+      RoleType
+    );
 
     AuthenticationTicket ticket = new(
       new ClaimsPrincipal(identity),
@@ -53,24 +56,30 @@ public class UserInfoAuthenticationHandler(
     );
 
     var requestInfo = new RequestInfo(
-      Guid.Parse(payload.Sub),
-      Request.Headers.AcceptLanguage.ToString(),
-      Request.Headers["x-request-id"].FirstOrDefault() ?? "",
-      Request.Headers["x-forwarded-for"].FirstOrDefault() ?? "",
-      Request.Headers.UserAgent.ToString(),
-      payload.FirstOrDefault(p => p.Key == "preferred_username").Value?.ToString() ?? "",
-      GivenName: payload.FirstOrDefault(p => p.Key == "given_name").Value?.ToString() ?? "",
-      FamilyName: payload.FirstOrDefault(p => p.Key == "family_name").Value?.ToString() ?? "",
-      Roles: ticket.Principal.Claims
-        .Where(c => c.Type == RoleType)
-        .Select(c => c.Value).ToList(),
-      Email: payload.FirstOrDefault(p => p.Key == "email").Value?.ToString() ?? ""
+      CorrelationId: Request.Headers["x-request-id"].FirstOrDefault() ?? "",
+      RequestIp: Request.Headers["x-forwarded-for"].FirstOrDefault() ?? "",
+      UserAgent: Request.Headers.UserAgent.ToString(),
+      AcceptLanguage: Request.Headers.AcceptLanguage.ToString()
     );
 
     Context.Features.Set(requestInfo);
 
+    var auditInfo = new AuditInfo(
+      UserId: Guid.Parse(payload.Sub),
+      UserName: payload.FirstOrDefault(p => p.Key == "preferred_username").Value?.ToString() ?? "",
+      GivenName: payload.FirstOrDefault(p => p.Key == "given_name").Value?.ToString() ?? "",
+      FamilyName: payload.FirstOrDefault(p => p.Key == "family_name").Value?.ToString() ?? "",
+      Roles: ticket.Principal.Claims
+        .Where(c => c.Type == RoleType)
+        .Select(c => c.Value)
+        .ToList(),
+      Email: payload.FirstOrDefault(p => p.Key == "email").Value?.ToString() ?? ""
+    );
+
+    Context.Features.Set(auditInfo);
+
     var tenantInfo = new TenantInfo(
-      payload.FirstOrDefault(p => p.Key == "tenant").Value?.ToString() ?? ""
+      Name: payload.FirstOrDefault(p => p.Key == "tenant").Value?.ToString() ?? ""
     );
 
     Context.Features.Set(tenantInfo);

@@ -7,27 +7,28 @@ public record TenantInfo(
   string Name
 );
 
-public interface ITenantContext {
-  TenantInfo TenantInfo { get; }
+public interface ITenantMetadata {
+  TenantInfo? TenantInfo { get; }
 }
 
-public class TenantContext : ITenantContext {
+public class TenantMetadata : ITenantMetadata {
   private readonly TenantInfo? _tenantInfo;
 
-  public TenantContext(IHttpContextAccessor httpContextAccessor) {
-    _tenantInfo = httpContextAccessor?.HttpContext?.Features.Get<TenantInfo>();
+  public TenantMetadata(IHttpContextAccessor httpContextAccessor) {
+    _tenantInfo = httpContextAccessor.HttpContext?.Features.Get<TenantInfo>();
+    // ArgumentNullException.ThrowIfNull(_tenantInfo);
   }
 
-  public TenantContext(TenantInfo tenantInfo) {
+  public TenantMetadata(TenantInfo tenantInfo) {
     _tenantInfo = tenantInfo;
+    ArgumentNullException.ThrowIfNull(_tenantInfo);
   }
 
   public TenantInfo TenantInfo => _tenantInfo;
 }
 
-public class DesignTimeTenantContext : ITenantContext {
+public class DesignTimeTenantMetadata : ITenantMetadata {
   public TenantInfo TenantInfo { get; } = new(
-    // Id: Guid.Empty,
     Name: string.Empty
   );
 }

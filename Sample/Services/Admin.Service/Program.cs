@@ -19,7 +19,10 @@ builder.AddHandlerServer(
     options.Interceptors.Add<ServerFeaturesInterceptor>();
   });
 
-builder.Services.AddScoped<IYaverContext, YaverContext>();
+builder.Services.AddScoped<IRequestMetadata, RequestMetadata>();
+builder.Services.AddScoped<IAuditMetadata, AuditMetadata>();
+// builder.Services.AddScoped<ITenantMetadata, TenantMetadata>();
+
 builder.Services.AddDbContext<ServiceDbContext>();
 
 builder.Services.AddHttpContextAccessor();
@@ -52,17 +55,13 @@ app.UseRequestLocalization();
 app.RegisterRpcCommandHandlers();
 
 var context = new ServiceDbContext(app.Configuration,
-  new YaverContext(
-    new RequestInfo(
+  new AuditMetadata(
+    new AuditInfo(
       UserId: Guid.NewGuid(),
-      AcceptLanguage: "",
-      RequestId: "",
-      RequestIp: "",
-      UserAgent: "",
-      UserName: "",
-      Email: "",
-      GivenName: "",
-      FamilyName: "",
+      UserName: string.Empty,
+      Email: string.Empty,
+      GivenName: string.Empty,
+      FamilyName: string.Empty,
       Roles: []
     )
   )

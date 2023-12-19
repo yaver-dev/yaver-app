@@ -49,19 +49,17 @@ public class ServerFeaturesInterceptor : Interceptor {
 
   private static void SetFeatures(ServerCallContext context) {
     var httpContext = context.GetHttpContext();
+    var cultureKey = string.Empty;
 
-    // Console.WriteLine(JsonSerializer.Serialize(httpContext.Request.Headers, new JsonSerializerOptions { WriteIndented = true }));
+    var requestMetadata = httpContext.Request.Headers["x-request-metadata"];
 
-    var yaverContextJson = httpContext.Request.Headers["x-yaver-context"];
-    // if (!string.IsNullOrEmpty(yaverContextJson)) {
-    var yaverContext = JsonSerializer.Deserialize<RequestInfo>(yaverContextJson);
+    if (!string.IsNullOrWhiteSpace(requestMetadata)) {
+      var requestInfo = JsonSerializer.Deserialize<RequestInfo>(requestMetadata!);
+      ArgumentNullException.ThrowIfNull(requestInfo);
+      httpContext.Features.Set(requestInfo);
+      cultureKey = requestInfo.AcceptLanguage;
+    }
 
-    // Console.WriteLine(JsonSerializer.Serialize(yaverContext, new JsonSerializerOptions { WriteIndented = true }));
-
-    httpContext.Features.Set(yaverContext);
-    // httpContext.Features.Set(httpContext.Request.Headers["Accept-Language"]);
-
-    var cultureKey = yaverContext.AcceptLanguage; //  httpContext.Request.Headers["Accept-Language"];
     if (!string.IsNullOrEmpty(cultureKey)) {
       if (DoesCultureExist(cultureKey)) {
         var culture = new CultureInfo(cultureKey);
@@ -70,10 +68,19 @@ public class ServerFeaturesInterceptor : Interceptor {
       }
     }
 
-    var tenantContextJson = httpContext.Request.Headers["x-tenant-context"];
+    var auditMetadata = httpContext.Request.Headers["x-audit-metadata"];
+
+    if (!string.IsNullOrWhiteSpace(auditMetadata)) {
+      var auditInfo = JsonSerializer.Deserialize<AuditInfo>(auditMetadata!);
+      ArgumentNullException.ThrowIfNull(auditInfo);
+      httpContext.Features.Set(auditInfo);
+    }
+
+    var tenantContextJson = httpContext.Request.Headers["x-tenant-metadata"];
     if (string.IsNullOrWhiteSpace(tenantContextJson)) return;
-    var tenantContext = JsonSerializer.Deserialize<TenantInfo>(tenantContextJson);
-    httpContext.Features.Set(tenantContext);
+    var tenantInfo = JsonSerializer.Deserialize<TenantInfo>(tenantContextJson!);
+    ArgumentNullException.ThrowIfNull(tenantInfo);
+    httpContext.Features.Set(tenantInfo);
   }
 
   private static bool DoesCultureExist(string cultureName) {

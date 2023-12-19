@@ -1,4 +1,6 @@
-﻿using Admin.Service.Data;
+﻿using System.Text.Json;
+
+using Admin.Service.Data;
 using Admin.Service.Features.DatabaseServers.Entities;
 using Admin.ServiceBase.Features.DatabaseServers;
 
@@ -41,9 +43,13 @@ public static class CreateDatabase {
   public sealed class Handler(
     ServiceDbContext db,
     IValidator<CreateDatabaseServerCommand> validator,
-    IStringLocalizer<Validator> localizer
+    IStringLocalizer<Validator> localizer,
+    IAuditMetadata auditMetadata,
+    ILogger<Handler> logger
   )
     : RpcCommandHandler<CreateDatabaseServerCommand, Result<DatabaseServerResult>> {
+    public ILogger<Handler> Logger { get; } = logger;
+
     public override async Task<Result<DatabaseServerResult>> ExecuteAsync(
       CreateDatabaseServerCommand command,
       CancellationToken ct
@@ -79,6 +85,11 @@ public static class CreateDatabase {
       //
       // //validate business rules - another flow
       // return Result<DatabaseServerResult>.Error("Business flow error 1");
+
+      logger.LogDebug(
+        "AuditInfo => {Serialize}",
+        JsonSerializer.Serialize(auditMetadata.AuditInfo)
+      );
 
       var entity = command.ToEntity();
 

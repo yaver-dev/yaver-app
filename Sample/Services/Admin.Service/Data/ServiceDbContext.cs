@@ -11,8 +11,8 @@ namespace Admin.Service.Data;
 public class ServiceDbContext : InMemoryDbContext {
   private const string Schema = "multitenancy";
 
-  public ServiceDbContext(IConfiguration configuration, IYaverContext yaverContext)
-    : base(yaverContext.RequestInfo.UserId) {
+  public ServiceDbContext(IConfiguration configuration, IAuditMetadata auditMetadata)
+    : base(auditMetadata.AuditInfo.UserId) {
     var connectionString = configuration.GetSection("ConnectionString").Value;
   }
 

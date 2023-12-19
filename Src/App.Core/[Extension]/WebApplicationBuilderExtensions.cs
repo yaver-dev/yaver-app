@@ -43,7 +43,7 @@ public static class WebApplicationBuilderExtensions {
   public static WebApplicationBuilder AddYaverConfiguration(this WebApplicationBuilder builder) {
     builder.Configuration
       .AddJsonFile("appsettings.json", true, true)
-      .AddJsonFile("secrets/appsecrets.json", optional: true, true)
+      .AddJsonFile("appsecrets.json", optional: true, true)
       .AddEnvironmentVariables();
 
     return builder;

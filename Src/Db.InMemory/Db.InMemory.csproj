@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Db.Core/Db.Core.csproj"/>
+    <ProjectReference Include="../Db.Core/Db.Core.csproj" />
   </ItemGroup>
 
   <!-- EntityFramework  -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.1" />
   </ItemGroup>
 
 </Project>

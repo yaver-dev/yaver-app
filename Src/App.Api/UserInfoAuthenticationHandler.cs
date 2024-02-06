@@ -79,7 +79,7 @@ public class UserInfoAuthenticationHandler(
     Context.Features.Set(auditInfo);
 
     var tenantInfo = new TenantInfo(
-      Name: payload.FirstOrDefault(p => p.Key == "tenant").Value?.ToString() ?? ""
+      Identifier: payload.FirstOrDefault(p => p.Key == "tenant").Value?.ToString() ?? ""
     );
 
     Context.Features.Set(tenantInfo);

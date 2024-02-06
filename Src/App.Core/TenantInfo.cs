@@ -7,7 +7,7 @@ namespace Yaver.App;
 /// </summary>
 public record TenantInfo(
   // Guid Id,
-  string Name
+  string Identifier
 );
 
 /// <summary>
@@ -58,6 +58,6 @@ public class DesignTimeTenantMetadata : ITenantMetadata {
   /// Represents information about a tenant.
   /// </summary>
   public TenantInfo TenantInfo { get; } = new(
-    Name: string.Empty
+    Identifier: string.Empty
   );
 }

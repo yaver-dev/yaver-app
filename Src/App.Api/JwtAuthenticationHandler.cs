@@ -62,7 +62,7 @@ public class JwtAuthenticationHandler : JwtBearerHandler {
     Context.Features.Set(auditInfo);
 
     var tenantInfo = new TenantInfo(
-      Name: jwtSecurityToken.Claims.FirstOrDefault(p => p.Type == "tenant")?.Value.ToString() ?? ""
+      Identifier: jwtSecurityToken.Claims.FirstOrDefault(p => p.Type == "tenant")?.Value.ToString() ?? ""
     );
 
     Context.Features.Set(tenantInfo);

@@ -6,13 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Db.Core/Db.Core.csproj"/>
+    <ProjectReference Include="../Db.Core/Db.Core.csproj" />
   </ItemGroup>
 
   <!-- PostgreSQL -->
   <ItemGroup>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="8.0.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="8.0.4" />
   </ItemGroup>
 
 </Project>

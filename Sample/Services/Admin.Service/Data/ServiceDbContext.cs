@@ -1,4 +1,4 @@
-using Admin.Service.Features.DatabaseServers.Entities;
+﻿using Admin.Service.Features.DatabaseServers.Entities;
 using Admin.Service.Features.Tenants.Entities;
 
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +43,5 @@ public class ServiceDbContext : InMemoryDbContext {
 
     // builder.HasDefaultSchema(Schema);
     builder.ApplyConfiguration(new DatabaseServerEntityTypeConfiguration());
-    // builder.ApplyConfiguration(new TenantEntityTypeConfiguration());
   }
 }

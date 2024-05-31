@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using Yaver.App;
 
@@ -11,7 +11,7 @@ namespace Yaver.Db;
 /// <remarks>
 ///   This class should be inherited by specific database contexts and configured accordingly.
 /// </remarks>
-public class BaseDbContext(Guid currentUserId) : DbContext { 
+public class BaseDbContext(Guid currentUserId) : DbContext {
   /// <summary>
   ///   Configures the context with options such as the connection string, database provider, and other settings.
   /// </summary>
@@ -22,5 +22,17 @@ public class BaseDbContext(Guid currentUserId) : DbContext {
     optionsBuilder.AddInterceptors(new AuditableEntitiesInterceptor(currentUserId));
 
     optionsBuilder.UseSnakeCaseNamingConvention();
+  }
+
+  /// <summary>
+  /// 
+  /// </summary>
+  /// <param name="configurationBuilder"></param>
+  protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) {
+    base.ConfigureConventions(configurationBuilder);
+
+    configurationBuilder
+      .Properties<Ulid>()
+      .HaveConversion<UlidToGuidConverter>();
   }
 }

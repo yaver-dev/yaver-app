@@ -1,4 +1,4 @@
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 
 namespace Yaver.Db;
 
@@ -9,7 +9,7 @@ public abstract class AuditableEntity {
   /// <summary>
   ///   Gets or sets the unique identifier for the entity.
   /// </summary>
-  public Guid Id { get; set; } = Guid.NewGuid();
+  public DbId Id { get; set; } = DbId.NewDbId();
 
   /// <summary>
   ///   Gets or sets the date and time when the entity was created.

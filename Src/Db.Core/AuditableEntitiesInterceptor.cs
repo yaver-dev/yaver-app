@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -68,7 +68,7 @@ public class AuditableEntitiesInterceptor(Guid currentUserId
   private void BeforeSaveTriggers(DbContext? context) {
     var entries = context?.ChangeTracker
       .Entries()
-      .Where(e => e is { Entity: AuditableEntity, State: EntityState.Added or EntityState.Modified });
+      .Where(e => e is { Entity: BaseAuditableEntity, State: EntityState.Added or EntityState.Modified });
 
     // var principal = contextAccessor.HttpContext.User;
     //
@@ -83,7 +83,7 @@ public class AuditableEntitiesInterceptor(Guid currentUserId
     if (entries == null) return;
 
     foreach (var entityEntry in entries) {
-      if (entityEntry.Entity is not AuditableEntity auditableEntity) continue;
+      if (entityEntry.Entity is not BaseAuditableEntity auditableEntity) continue;
 
       auditableEntity.UpdatedAt = DateTime.UtcNow;
       auditableEntity.UpdatedBy = currentUserId;

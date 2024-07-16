@@ -10,7 +10,7 @@ namespace Yaver.Db;
 ///   by setting the column type of all string properties to "citext" and enabling the "citext" extension.
 /// </remarks>
 /// <seealso cref="BaseDbContext" />
-public class PgDbContext(DbContextOptions options) : BaseDbContext(options) {
+public class PgDbContext(DbContextOptions options) : DbContext(options) {
 
   /// <summary>
   ///   Override this method to further configure the model that was discovered by convention from the entity types

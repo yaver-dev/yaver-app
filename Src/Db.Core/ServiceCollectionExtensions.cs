@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions {
 
   public static IServiceCollection RegisterDbContext<TDbContext>(this IServiceCollection services,
       Action<IServiceProvider, DbContextOptionsBuilder> configureDbContextOptionsBuilder,
-      bool registerDbContextFactory = true) where TDbContext : BaseDbContext {
+      bool registerDbContextFactory = true) where TDbContext : DbContext {
 
     if (registerDbContextFactory) {
       //Register Db context factory (this also registers db context)

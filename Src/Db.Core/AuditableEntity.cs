@@ -9,5 +9,5 @@ public abstract class AuditableEntity : BaseAuditableEntity {
   /// <summary>
   ///   Gets or sets the unique identifier for the entity.
   /// </summary>
-  public Guid Id { get; set; } = Guid.NewGuid();
+  public Guid Id { get; set; } = GuidV7.CreateVersion7();
 }

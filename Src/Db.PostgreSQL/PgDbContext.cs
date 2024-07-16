@@ -10,7 +10,8 @@ namespace Yaver.Db;
 ///   by setting the column type of all string properties to "citext" and enabling the "citext" extension.
 /// </remarks>
 /// <seealso cref="BaseDbContext" />
-public class PgDbContext(Guid currentUserId) : BaseDbContext(currentUserId) {
+public class PgDbContext(DbContextOptions options) : BaseDbContext(options) {
+
   /// <summary>
   ///   Override this method to further configure the model that was discovered by convention from the entity types
   ///   exposed in <see cref="DbSet{TEntity}" /> properties on your derived context. The resulting model may be cached
@@ -18,6 +19,7 @@ public class PgDbContext(Guid currentUserId) : BaseDbContext(currentUserId) {
   /// </summary>
   /// <param name="builder">The builder being used to construct the model for this context.</param>
   protected override void OnModelCreating(ModelBuilder builder) {
+    base.OnModelCreating(builder);
     builder
       .HasPostgresExtension("citext");
 
@@ -26,8 +28,6 @@ public class PgDbContext(Guid currentUserId) : BaseDbContext(currentUserId) {
         prop.SetColumnType("citext");
       }
     }
-
-    base.OnModelCreating(builder);
   }
 
   public void GenerateUuidV7Function() {

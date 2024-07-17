@@ -22,35 +22,22 @@ public static class ServiceCollectionExtensions {
     return services;
   }
 
-  public static IServiceCollection RegisterDbContext<TDbContext>(this IServiceCollection services,
-      Action<IServiceProvider, DbContextOptionsBuilder> configureDbContextOptionsBuilder,
-      bool registerDbContextFactory = true) where TDbContext : DbContext {
+  public static IServiceCollection RegisterDbContext<TDbContext>(
+    this IServiceCollection services,
+    Action<IServiceProvider, DbContextOptionsBuilder> configureDbContextOptionsBuilder)
+    where TDbContext : DbContext {
 
-    if (registerDbContextFactory) {
-      //Register Db context factory (this also registers db context)
-      services.AddDbContextFactory<TDbContext>((provider, options) => {
-        configureDbContextOptionsBuilder.Invoke(provider, options);
-        var currentUserId = Guid.Empty;
-        using (var scope = provider.CreateScope()) {
-          var auditMetadata = scope.ServiceProvider.GetService<IAuditMetadata>();
-          currentUserId = auditMetadata?.AuditInfo?.UserId ?? Guid.Empty;
-        }
-        options.AddInterceptors(new AuditableEntitiesInterceptor(currentUserId));
-        options.UseSnakeCaseNamingConvention();
-      });
-    } else {
-      //Register Db context
-      services.AddDbContext<TDbContext>((provider, options) => {
-        configureDbContextOptionsBuilder?.Invoke(provider, options);
-        var currentUserId = Guid.Empty;
-        using (var scope = provider.CreateScope()) {
-          var auditMetadata = scope.ServiceProvider.GetService<IAuditMetadata>();
-          currentUserId = auditMetadata?.AuditInfo?.UserId ?? Guid.Empty;
-        }
-        options.AddInterceptors(new AuditableEntitiesInterceptor(currentUserId));
-        options.UseSnakeCaseNamingConvention();
-      });
-    }
+    //Register Db context
+    services.AddDbContext<TDbContext>((provider, options) => {
+      configureDbContextOptionsBuilder?.Invoke(provider, options);
+      var currentUserId = Guid.Empty;
+      using (var scope = provider.CreateScope()) {
+        var auditMetadata = scope.ServiceProvider.GetService<IAuditMetadata>();
+        currentUserId = auditMetadata?.AuditInfo?.UserId ?? Guid.Empty;
+      }
+      options.AddInterceptors(new AuditableEntitiesInterceptor(currentUserId));
+      options.UseSnakeCaseNamingConvention();
+    });
     return services;
   }
 }

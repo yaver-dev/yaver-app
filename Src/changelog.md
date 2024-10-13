@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.52.0] - 2024-10-13
+
+### Changed
+- Default constructor added to PgDbContext with this we can configure connection on onConfiguring override not strictly on constructor.
+- Linq helper class has been improved, and it accepts int, bool and enum types as term without breaking and changing anything.
+
+### Fixed
+- Also sample project and in-memory sample db context has been fixed.
+
 ## [0.48.0] - 2024-05-20
 
 ### Changed
@@ -22,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.46.0] - 2024-04-03
 
 ### Changed
-
+[Directory.Build.props](Directory.Build.props)
 - version bump for various nuget packages
 
 ## [0.45.1] - 2024-02-24

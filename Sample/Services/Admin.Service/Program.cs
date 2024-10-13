@@ -13,26 +13,16 @@ builder.AddYaverLogger();
 
 // Accept only HTTP/2 to allow insecure connections for development.
 // builder.WebHost.ConfigureKestrel(o => o.ListenAnyIP(6000, c => c.Protocols = HttpProtocols.Http2));
-builder.AddHandlerServer(
-  options => {
-    // options.Interceptors.Add<ServerLogInterceptor>();
-    options.Interceptors.Add<ServerFeaturesInterceptor>();
-  });
+builder.AddHandlerServer(options => { options.Interceptors.Add<ServerFeaturesInterceptor>(); });
 
 builder.Services.AddScoped<IRequestMetadata, RequestMetadata>();
 builder.Services.AddScoped<IAuditMetadata, AuditMetadata>();
-// builder.Services.AddScoped<ITenantMetadata, TenantMetadata>();
 
 builder.Services.AddDbContext<ServiceDbContext>();
 
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-//from lib
-// builder.Services.AddRpcCommandHandlers();
-// builder.Services.AddValidator<IdRequestValidator>();
-
 
 builder.Services.AddLocalization();
 builder.Services.Configure<RequestLocalizationOptions>(options => {
@@ -45,28 +35,12 @@ builder.Services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactor
 builder.Services.AddDistributedMemoryCache();
 
 
-// builder.Services.AddSingleton<IStringLocalizerFactory>(new JsonStringLocalizerFactory());
-
-
 var app = builder.Build();
 app.UseRequestLocalization();
 
-// app.MapRpcCommandHandlers();
 app.RegisterRpcCommandHandlers();
 
-var context = new ServiceDbContext(app.Configuration,
-  new AuditMetadata(
-    new AuditInfo(
-      UserId: Guid.NewGuid(),
-      UserName: string.Empty,
-      Email: string.Empty,
-      GivenName: string.Empty,
-      FamilyName: string.Empty,
-      Roles: []
-    )
-  )
-);
-
+var context = new ServiceDbContext();
 
 context.Database.EnsureCreated();
 

@@ -16,8 +16,6 @@
     <PackageVersion Include="EFCore.NamingConventions" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication" Version="2.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" />
-    <PackageVersion Include="Serilog.Aspnetcore" Version="9.0.0" />
-    <PackageVersion Include="Serilog.Formatting.Elasticsearch" Version="10.0.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.8.0" />
     <PackageVersion Include="UUIDNext" Version="4.1.1" />
     <PackageVersion Include="FluentValidation" Version="11.11.0" />

@@ -5,13 +5,6 @@
     <RootNamespace>Yaver.App</RootNamespace>
   </PropertyGroup>
 
-
-  <!-- Serilog -->
-  <ItemGroup>
-    <PackageReference Include="Serilog.Aspnetcore" />
-    <PackageReference Include="Serilog.Formatting.Elasticsearch" />
-  </ItemGroup>
-
   <!-- FastEndpoints -->
   <ItemGroup>
     <PackageReference Include="FastEndpoints" />

@@ -5,14 +5,20 @@ using Microsoft.Extensions.Localization;
 
 namespace Yaver.App;
 
-
 /// <summary>
-/// Represents a string localizer that retrieves localized strings from a JSON file.
+/// Provides string localization using JSON files as the resource source.
 /// </summary>
 public class JsonStringLocalizer(IDistributedCache cache) : IStringLocalizer {
   private readonly IDistributedCache _cache = cache;
   private readonly JsonSerializerOptions _serializerOptions = new();
 
+  /// <summary>
+  /// Gets the localized string for the specified resource name.
+  /// </summary>
+  /// <param name="name">The resource name to localize.</param>
+  /// <returns>
+  /// The localized string for the specified name. If not found, returns the original name and sets <see cref="LocalizedString.ResourceNotFound"/> to true.
+  /// </returns>
   public LocalizedString this[string name] {
     get {
       var value = GetString(name);
@@ -20,6 +26,14 @@ public class JsonStringLocalizer(IDistributedCache cache) : IStringLocalizer {
     }
   }
 
+  /// <summary>
+  /// Gets the localized string for the specified resource name and formats it with the provided arguments.
+  /// </summary>
+  /// <param name="name">The resource name to localize.</param>
+  /// <param name="arguments">Arguments to format the localized string.</param>
+  /// <returns>
+  /// The formatted localized string as a <see cref="LocalizedString"/>. If not found, returns the original name and sets <see cref="LocalizedString.ResourceNotFound"/> to true.
+  /// </returns>
   public LocalizedString this[string name, params object[] arguments] {
     get {
       var actualValue = this[name];
@@ -30,10 +44,10 @@ public class JsonStringLocalizer(IDistributedCache cache) : IStringLocalizer {
   }
 
   /// <summary>
-  /// Retrieves all localized strings from the JSON file based on the current culture.
+  /// Retrieves all localized strings from the JSON file for the current culture.
   /// </summary>
-  /// <param name="includeParentCultures">A boolean value indicating whether to include parent cultures.</param>
-  /// <returns>An enumerable collection of LocalizedString objects.</returns>
+  /// <param name="includeParentCultures">Whether to include parent cultures in the search.</param>
+  /// <returns>An enumerable collection of <see cref="LocalizedString"/> objects.</returns>
   public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) {
     var filePath = $"i18n/{Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName}.json";
     using var str = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -44,6 +58,11 @@ public class JsonStringLocalizer(IDistributedCache cache) : IStringLocalizer {
     }
   }
 
+  /// <summary>
+  /// Gets the localized string value for the specified key from the cache or JSON file.
+  /// </summary>
+  /// <param name="key">The resource key to look up.</param>
+  /// <returns>The localized string value, or null if not found.</returns>
   private string? GetString(string key) {
     var relativeFilePath = $"i18n/{Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName}.json";
     var fullFilePath = Path.GetFullPath(relativeFilePath);
@@ -58,13 +77,18 @@ public class JsonStringLocalizer(IDistributedCache cache) : IStringLocalizer {
 
       if (!string.IsNullOrEmpty(result)) {
         _cache.SetString(cacheKey, result);
-
       }
       return result;
     }
     return default;
   }
 
+  /// <summary>
+  /// Retrieves the value for a given property name from the specified JSON file.
+  /// </summary>
+  /// <param name="propertyName">The property name to look up.</param>
+  /// <param name="filePath">The path to the JSON file.</param>
+  /// <returns>The value as a string, or null if not found.</returns>
   private static string? GetValueFromJSON(string propertyName, string filePath) {
     if (propertyName == null || filePath == null) {
       return default;

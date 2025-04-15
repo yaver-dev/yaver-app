@@ -9,7 +9,7 @@ using Microsoft.Extensions.Localization;
 using Yaver.App;
 
 var builder = WebApplication.CreateSlimBuilder(args);
-builder.AddYaverLogger();
+// builder.AddYaverLogger();
 
 // Accept only HTTP/2 to allow insecure connections for development.
 // builder.WebHost.ConfigureKestrel(o => o.ListenAnyIP(6000, c => c.Protocols = HttpProtocols.Http2));

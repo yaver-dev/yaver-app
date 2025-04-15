@@ -20,7 +20,7 @@ using Yaver.App;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
-builder.AddYaverLogger().AddYaverConfiguration();
+builder.AddYaverConfiguration();
 
 builder.Services.Configure<JsonOptions>(o =>
   o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -59,7 +59,7 @@ builder.Services
 //   };
 // });
 
-//     
+//
 // .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // .AddScheme<JwtBearerOptions, JwtAuthenticationHandler>(JwtBearerDefaults.AuthenticationScheme, options => { });
 
@@ -68,7 +68,9 @@ var supportedCultures = new[] { new CultureInfo("tr-TR"), new CultureInfo("en-UK
 var app = builder.Build();
 app.UseRequestLocalization(
   new RequestLocalizationOptions {
-    DefaultRequestCulture = new("en-UK"), SupportedCultures = supportedCultures, SupportedUICultures = supportedCultures
+    DefaultRequestCulture = new("en-UK"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
   });
 
 app

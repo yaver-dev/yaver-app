@@ -8,14 +8,14 @@
 
   <!-- Serilog -->
   <ItemGroup>
-    <PackageReference Include="Serilog.Aspnetcore" Version="8.0.1" />
+    <PackageReference Include="Serilog.Aspnetcore" Version="9.0.0" />
     <PackageReference Include="Serilog.Formatting.Elasticsearch" Version="10.0.0" />
   </ItemGroup>
 
   <!-- FastEndpoints -->
   <ItemGroup>
-    <PackageReference Include="FastEndpoints" Version="5.25.0" />
-    <PackageReference Include="FastEndpoints.Messaging.Remote" Version="5.25.0" />
-    <PackageReference Include="FluentValidation" Version="11.9.1" />
+    <PackageReference Include="FastEndpoints" Version="6.0.0" />
+    <PackageReference Include="FastEndpoints.Messaging.Remote" Version="6.0.0" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,6 @@
   <!-- EntityFrameworkCore -->
   <ItemGroup>
     <PackageReference Include="Audit.EntityFramework.Core" />
-    <PackageReference Include="UUIDNext" />
     <PackageReference Include="EFCore.NamingConventions" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">

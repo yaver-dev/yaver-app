@@ -1,4 +1,3 @@
-using Serilog;
 
 namespace Api;
 
@@ -7,7 +6,6 @@ public class ResponseLogger : IGlobalPostProcessor {
     await Task.CompletedTask;
 
 
-    Log.Information(
-      $"request:{ctx.Request} response: {ctx.Response}");
+
   }
 }

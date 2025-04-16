@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Text.Json;
 
-using Serilog;
 
 namespace Api;
 
@@ -10,9 +9,7 @@ public class RequestLogger : IGlobalPreProcessor {
     await Task.CompletedTask;
     // var logger = ctx.HttpContext.Resolve<ILogger>();
 
-    Log.Information(
-      $"request:{ctx.Request.GetType().FullName} path: {ctx.HttpContext.Request.Path}"
-    );
+
 
     // var logger = ctx.RequestServices.GetRequiredService<ILogger>();
     // logger.LogInformation($"request:{req?.GetType().FullName} path: {ctx.Request.Path}");

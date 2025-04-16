@@ -1,21 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>Yaver.App.Core</AssemblyName>
     <RootNamespace>Yaver.App</RootNamespace>
   </PropertyGroup>
 
-
-  <!-- Serilog -->
-  <ItemGroup>
-    <PackageReference Include="Serilog.Aspnetcore" Version="8.0.1" />
-    <PackageReference Include="Serilog.Formatting.Elasticsearch" Version="10.0.0" />
-  </ItemGroup>
-
   <!-- FastEndpoints -->
   <ItemGroup>
-    <PackageReference Include="FastEndpoints" Version="5.25.0" />
-    <PackageReference Include="FastEndpoints.Messaging.Remote" Version="5.25.0" />
-    <PackageReference Include="FluentValidation" Version="11.9.1" />
+    <PackageReference Include="FastEndpoints" />
+    <PackageReference Include="FastEndpoints.Messaging.Remote" />
+    <PackageReference Include="FluentValidation" />
   </ItemGroup>
 </Project>

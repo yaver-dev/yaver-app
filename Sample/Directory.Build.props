@@ -9,7 +9,6 @@
   <PropertyGroup>
     <Authors>Yaver</Authors>
     <Version>9.0.0</Version>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://yaver.dev/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/yaverdev/Yaver.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

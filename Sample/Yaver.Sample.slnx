@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/Devops/">
+    <File Path="../Src/changelog.md" />
+    <File Path="../Src/Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Sample/" />
+  <Folder Name="/Sample/Api/">
+    <Project Path="Api/Api.csproj" />
+  </Folder>
+  <Folder Name="/Sample/Contracts/">
+    <Project Path="RestContracts/admin-api-oas/out/yaver-cs-fastendpoints/src/Admin.ApiBase/Admin.ApiBase.csproj" />
+    <Project Path="RpcContracts/Admin.ServiceBase/Admin.ServiceBase.csproj" />
+  </Folder>
+  <Folder Name="/Sample/Services/">
+    <Project Path="Services/Admin.Service/Admin.Service.csproj" />
+  </Folder>
+  <Folder Name="/Src/" />
+  <Folder Name="/Src/App/">
+    <Project Path="../Src/App.Api/App.Api.csproj" />
+    <Project Path="../Src/App.Core/App.Core.csproj" />
+    <Project Path="../Src/App.Service/App.Service.csproj" />
+  </Folder>
+  <Folder Name="/Src/Db/">
+    <Project Path="../Src/Db.Core/Db.Core.csproj" />
+    <Project Path="../Src/Db.InMemory/Db.InMemory.csproj" />
+    <Project Path="../Src/Db.PostgreSQL/Db.PostgreSQL.csproj" />
+  </Folder>
+</Solution>

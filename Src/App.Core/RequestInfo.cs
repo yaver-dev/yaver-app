@@ -63,6 +63,16 @@ public class RequestMetadata : IRequestMetadata {
   public RequestInfo RequestInfo => _requestInfo;
 }
 
+/// <summary>
+/// Represents request metadata specifically for design-time scenarios.
+/// This class provides default, empty values for request information,
+/// suitable for use when actual HTTP request context is unavailable,
+/// such as during design-time operations or unit testing.
+/// </summary>
+/// <remarks>
+/// Implements the <see cref="IRequestMetadata"/> interface by providing
+/// a <see cref="RequestInfo"/> property initialized with empty strings.
+/// </remarks>
 public class DesignTimeRequestMetadata : IRequestMetadata {
   /// <inheritdoc />
   /// <summary>

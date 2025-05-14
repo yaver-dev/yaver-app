@@ -31,7 +31,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options => {
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
 });
-builder.Services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
+builder.Services.AddSingleton<IStringLocalizerFactory, InMemoryJsonStringLocalizerFactory>();
 builder.Services.AddDistributedMemoryCache();
 
 

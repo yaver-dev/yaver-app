@@ -1,15 +1,12 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 
 namespace Yaver.App;
 
-/// <summary>
-/// Provides string localization using JSON files as the resource source.
-/// </summary>
-public class JsonStringLocalizer(IDistributedCache cache) : IStringLocalizer {
-  private readonly IDistributedCache _cache = cache;
+public class InMemoryJsonStringLocalizer(IMemoryCache cache) : IStringLocalizer {
+  private readonly IMemoryCache _cache = cache;
   private readonly JsonSerializerOptions _serializerOptions = new();
 
   /// <summary>
@@ -68,7 +65,7 @@ public class JsonStringLocalizer(IDistributedCache cache) : IStringLocalizer {
     var fullFilePath = Path.GetFullPath(relativeFilePath);
     if (File.Exists(fullFilePath)) {
       var cacheKey = $"locale_{Thread.CurrentThread.CurrentCulture.Name}_{key}";
-      var cacheValue = _cache.GetString(cacheKey);
+      var cacheValue = _cache.Get<string>(cacheKey);
       if (!string.IsNullOrEmpty(cacheValue)) {
         return cacheValue;
       }
@@ -76,7 +73,7 @@ public class JsonStringLocalizer(IDistributedCache cache) : IStringLocalizer {
       var result = GetValueFromJSON(key, Path.GetFullPath(relativeFilePath));
 
       if (!string.IsNullOrEmpty(result)) {
-        _cache.SetString(cacheKey, result);
+        _cache.Set<string>(cacheKey, result);
       }
       return result;
     }
